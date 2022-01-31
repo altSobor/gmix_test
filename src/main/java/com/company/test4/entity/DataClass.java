@@ -22,7 +22,7 @@ public class DataClass {
 
     @Composition
     @OneToMany(mappedBy = "dataClass")
-    private List<Output> outputData;
+    protected List<Output> outputData;
 
     public List<Output> getOutputData() {
         return outputData;

@@ -17,32 +17,32 @@ public class Output {
 
     @Column(name = "OUTPUT_")
     @Lob
-    private String output;
+    protected String output;
     @JoinColumn(name = "DATA_CLASS_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private DataClass dataClass;
+private DataClass dataClass;
 
-    public DataClass getDataClass() {
+public DataClass getDataClass() {
         return dataClass;
-    }
+        }
 
-    public void setDataClass(DataClass dataClass) {
+public void setDataClass(DataClass dataClass) {
         this.dataClass = dataClass;
-    }
+        }
 
-    public String getOutput() {
+public String getOutput() {
         return output;
-    }
+        }
 
-    public void setOutput(String output) {
+public void setOutput(String output) {
         this.output = output;
-    }
+        }
 
-    public UUID getId() {
+public UUID getId() {
         return id;
-    }
+        }
 
-    public void setId(UUID id) {
+public void setId(UUID id) {
         this.id = id;
-    }
-}
+        }
+        }

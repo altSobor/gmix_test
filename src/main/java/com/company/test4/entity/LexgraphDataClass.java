@@ -1,6 +1,8 @@
 package com.company.test4.entity;
 
 import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.metamodel.annotation.DependsOnProperties;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 
 import javax.persistence.Column;
@@ -43,5 +45,25 @@ public class LexgraphDataClass extends DataClass {
 
     public void setStrCount(Integer strCount) {
         this.strCount = strCount;
+    }
+
+    @InstanceName
+    @DependsOnProperties({"id"})
+    public String getInstanceName() {
+        return String.format("%s", getId());
+    }
+
+    public List<Output> countOutputData(List<LexgraphInput> inputData){
+        for(int i = 0; i < strCount; i++){
+            for(int j = strCount; j < subStrCount; j++){
+                if(inputData.get(i).input.toLowerCase().contains(inputData.get(j).input.toLowerCase())){
+                    Output outputs = new Output();
+                    outputs.output = inputData.get(j).input;
+                    super.outputData.add(outputs);
+                    break;
+                }
+            }
+        }
+        return super.outputData;
     }
 }

@@ -17,7 +17,7 @@ public class LexgraphInput {
 
     @Column(name = "INPUT_")
     @Lob
-    private String input;
+    protected String input;
     @JoinColumn(name = "LEXGRAPH_DATA_CLASS_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private LexgraphDataClass lexgraphDataClass;
