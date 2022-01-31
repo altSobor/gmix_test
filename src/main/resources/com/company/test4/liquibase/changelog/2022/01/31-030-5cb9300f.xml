@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="test4">
+        <addColumn tableName="OUTPUT_">
+            <column name="DATA_CLASS_ID" type="UUID"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="DATA_CLASS_ID" tableName="OUTPUT_"/>
+    </changeSet>
+    <changeSet id="2" author="test4">
+        <addColumn tableName="DATA_CLASS">
+            <column name="TASK_TYPE" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3" author="test4">
+        <addForeignKeyConstraint baseColumnNames="DATA_CLASS_ID" baseTableName="OUTPUT_"
+                                 constraintName="FK_OUTPUT__ON_DATA_CLASS" referencedColumnNames="ID"
+                                 referencedTableName="DATA_CLASS"/>
+    </changeSet>
+</databaseChangeLog>

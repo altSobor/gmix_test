@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="test4">
+        <createTable tableName="LEXGRAPH_INPUT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_LEXGRAPH_INPUT"/>
+            </column>
+            <column name="INPUT_" type="CLOB"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="test4">
+        <createTable tableName="MAG_NUM_INPUT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MAG_NUM_INPUT"/>
+            </column>
+            <column name="INPUT_" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="test4">
+        <createTable tableName="OUTPUT_">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_OUTPUT_"/>
+            </column>
+            <column name="OUTPUT_" type="CLOB"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

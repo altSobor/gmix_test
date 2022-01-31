@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="test4">
+        <addColumn tableName="LEXGRAPH_INPUT">
+            <column name="LEXGRAPH_DATA_CLASS_ID" type="UUID"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="LEXGRAPH_DATA_CLASS_ID" tableName="LEXGRAPH_INPUT"/>
+    </changeSet>
+    <changeSet id="2" author="test4">
+        <addColumn tableName="MAG_NUM_INPUT">
+            <column name="MAG_NUM_DATA_CLASS_ID" type="UUID"/>
+        </addColumn>
+
+        <addNotNullConstraint columnName="MAG_NUM_DATA_CLASS_ID" tableName="MAG_NUM_INPUT"/>
+    </changeSet>
+    <changeSet id="3" author="test4">
+        <addColumn tableName="DATA_CLASS">
+            <column name="MIN_COST" type="INT"/>
+            <column name="STR_COUNT" type="INT"/>
+            <column name="STR_SUM" type="VARCHAR(255)"/>
+            <column name="SUB_STR_COUNT" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="test4">
+        <addForeignKeyConstraint baseColumnNames="LEXGRAPH_DATA_CLASS_ID" baseTableName="LEXGRAPH_INPUT"
+                                 constraintName="FK_LEXGRAPHINP_ON_LEXGRAPHDAT" referencedColumnNames="ID"
+                                 referencedTableName="DATA_CLASS"/>
+    </changeSet>
+    <changeSet id="5" author="test4">
+        <addForeignKeyConstraint baseColumnNames="MAG_NUM_DATA_CLASS_ID" baseTableName="MAG_NUM_INPUT"
+                                 constraintName="FK_MAGNUMINPUT_ON_MAGNUMDATACL" referencedColumnNames="ID"
+                                 referencedTableName="DATA_CLASS"/>
+    </changeSet>
+</databaseChangeLog>
