@@ -15,12 +15,24 @@ public class LexgraphInput {
     @Id
     private UUID id;
 
+    @Column(name = "INPUT_TYPE")
+    private String inputType;
+
     @Column(name = "INPUT_")
     @Lob
     protected String input;
+
     @JoinColumn(name = "LEXGRAPH_DATA_CLASS_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private LexgraphDataClass lexgraphDataClass;
+
+    public String getInputType() {
+        return inputType;
+    }
+
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
+    }
 
     public LexgraphDataClass getLexgraphDataClass() {
         return lexgraphDataClass;

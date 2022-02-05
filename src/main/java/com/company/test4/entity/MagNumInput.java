@@ -17,6 +17,7 @@ public class MagNumInput {
 
     @Column(name = "INPUT_")
     protected Integer input;
+
     @JoinColumn(name = "MAG_NUM_DATA_CLASS_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private MagNumDataClass magNumDataClass;

@@ -1,55 +1,151 @@
 package com.company.test4.screen.main;
 
-import io.jmix.ui.ScreenTools;
-import io.jmix.ui.component.AppWorkArea;
-import io.jmix.ui.component.Button;
-import io.jmix.ui.component.Window;
-import io.jmix.ui.component.mainwindow.Drawer;
-import io.jmix.ui.icon.JmixIcon;
+import com.company.test4.entity.*;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.data.table.ContainerTableItems;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.Subscribe;
-import io.jmix.ui.screen.UiController;
-import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.screen.UiDescriptor;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @UiController("MainScreen")
 @UiDescriptor("main-screen.xml")
 @Route(path = "main", root = true)
-public class MainScreen extends Screen implements Window.HasWorkArea {
+public class MainScreen extends Screen {
+    @Autowired
+    private Button importBtn;
+    @Autowired
+    private FileStorageUploadField uploadBtn;
+    @Autowired
+    private Button exportBtn;
+    @Autowired
+    private Button saveBtn;
+    @Autowired
+    private Button countBtn;
 
     @Autowired
-    private ScreenTools screenTools;
+    private ComboBox tasksCbx;
 
+    int taskType = 1;
     @Autowired
-    private AppWorkArea workArea;
+    private Table lexgraphInputsTable;
     @Autowired
-    private Drawer drawer;
+    private Table lexgraphInputsTable1;
     @Autowired
-    private Button collapseDrawerButton;
+    private CollectionContainer<LexgraphInput> lexgraphInputsDc;
+    @Autowired
+    private CollectionContainer<LexgraphInput> lexgraphInputsDc_1;
+    @Autowired
+    private CollectionContainer<MagNumInput> magNumInputsDc;
+    @Autowired
+    private Table<MagNumInput> magNumInputsTable;
+    @Autowired
+    private Table outputsTable;
+    @Autowired
+    private CollectionContainer<Output> outputsDc;
+    @Autowired
+    private TemporaryStorage temporaryStorage;
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private CollectionLoader<Output> outputsDl;
+    @Autowired
+    private CollectionLoader<MagNumInput> magNumInputsDl;
+    @Autowired
+    private CollectionLoader<LexgraphInput> lexgraphInputsDl1;
+    @Autowired
+    private CollectionLoader<LexgraphInput> lexgraphInputsDl;
 
+    private MagNumDataClass dataM = new MagNumDataClass();
+    private LexgraphDataClass dataL = new LexgraphDataClass();
+    ArrayList<int[][]> MagNum = new ArrayList<int[][]>();
+    ExecutorService executor = Executors.newFixedThreadPool(1);
+    CounterThread counterThread = new CounterThread(15);
+    List<MagNumInput> inputDataM;
+    List<LexgraphInput> inputDataL;
 
-    @Override
-    public AppWorkArea getWorkArea() {
-        return workArea;
-    }
+    @Subscribe
+    public void onInit(InitEvent event) {
+        executor.execute(counterThread);
+        List<String> list = new ArrayList<>();
+        list.add("Magic square");
+        list.add("Lexical graf");
+        tasksCbx.setOptionsList(list);
+        lexgraphInputsTable.setItems(new ContainerTableItems<>(lexgraphInputsDc));
+        lexgraphInputsTable1.setItems(new ContainerTableItems<>(lexgraphInputsDc_1));
 
-    @Subscribe("collapseDrawerButton")
-    private void onCollapseDrawerButtonClick(Button.ClickEvent event) {
-        drawer.toggle();
-        if (drawer.isCollapsed()) {
-            collapseDrawerButton.setIconFromSet(JmixIcon.CHEVRON_RIGHT);
-        } else {
-            collapseDrawerButton.setIconFromSet(JmixIcon.CHEVRON_LEFT);
+        for(int i = 0; i < 9; i++){
+            inputDataM.add(new MagNumInput());
+            inputDataM.get(i).setInput(i+1);
+            inputDataM.get(i).setMagNumDataClass(dataM);
         }
     }
 
-    @Subscribe
-    public void onAfterShow(AfterShowEvent event) {
-        screenTools.openDefaultScreen(
-                UiControllerUtils.getScreenContext(this).getScreens());
+    @Install(to = "lexgraphInputsTable", subject = "emptyStateLinkClickHandler")
+    private void lexgraphInputsTableEmptyStateLinkClickHandler(
+            Table.EmptyStateClickEvent<LexgraphInput> emptyStateClickEvent) {
 
-        screenTools.handleRedirect();
+    }
+
+    @Subscribe("saveBtn")
+    protected void  onSaveButtonClick(Button.ClickEvent event) {
+
+    }
+    @Subscribe("uploadBtn")
+    public void onUploadBtnFileUploadStart(UploadField.FileUploadStartEvent event) {
+        /*File file = temporaryStorage.getFile(uploadBtn.getFileId());
+        if (file != null) {
+            notifications.create()
+                    .withCaption("File is uploaded to temporary storage at " + file.getAbsolutePath())
+                    .show();
+        }
+        file = null;*/
+    }
+    @Subscribe("importBtn")
+    protected void  onImportButtonClick(Button.ClickEvent event) {
+
+    }
+    @Subscribe("exportBtn")
+    protected void  onExportButtonClick(Button.ClickEvent event) {
+
+    }
+    @Subscribe("countBtn")
+    protected void  onCountButtonClick(Button.ClickEvent event) {
+        if(tasksCbx.getValue().equals("Magic square")){
+            dataM.countOutputData( inputDataM, MagNum);
+        }
+        else if(tasksCbx.getValue().equals("Lexical graf")){
+            dataL.countOutputData(inputDataL);
+        }
+    }
+
+    @Subscribe("tasksCbx")
+    public void onTasksCbxValueChange(HasValue.ValueChangeEvent event) {
+        if(tasksCbx.getValue().equals("Magic square")){
+            if(!counterThread.isActive){
+                MagNum = counterThread.getMagQuard();
+                executor.shutdownNow();
+            }
+            taskType = 0;
+            lexgraphInputsTable.setVisible(false);
+            lexgraphInputsTable1.setVisible(false);
+            magNumInputsTable.setVisible(true);
+        }
+        else if(tasksCbx.getValue().equals("Lexical graf")){
+            taskType = 1;
+            lexgraphInputsTable.setVisible(true);
+            lexgraphInputsTable1.setVisible(true);
+            magNumInputsTable.setVisible(false);
+        }
+
     }
 }
