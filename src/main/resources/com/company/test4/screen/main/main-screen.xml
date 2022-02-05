@@ -124,9 +124,7 @@
                     <table id="magNumInputsTable" dataContainer="magNumInputsDc" height="200px" width="200px"
                            visible="false" editable="true" columnHeaderVisible="false">
                         <columns>
-                            <column id="0" width="66px" editable="true"/>
-                            <column id="1" width="66px" editable="true"/>
-                            <column id="2" width="66px" editable="true"/>
+                            <column id="input" width="66px" editable="true"/>
                         </columns>
                     </table>
 

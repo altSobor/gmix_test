@@ -3,6 +3,7 @@ package com.company.test4.screen.main;
 import com.company.test4.entity.*;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.component.*;
+import io.jmix.ui.component.data.TableItems;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -83,17 +85,17 @@ public class MainScreen extends Screen {
         lexgraphInputsTable.setItems(new ContainerTableItems<>(lexgraphInputsDc));
         lexgraphInputsTable1.setItems(new ContainerTableItems<>(lexgraphInputsDc_1));
 
-        for(int i = 0; i < 9; i++){
-            inputDataM.add(new MagNumInput());
-            inputDataM.get(i).setInput(i+1);
-            inputDataM.get(i).setMagNumDataClass(dataM);
-        }
+
     }
 
     @Install(to = "lexgraphInputsTable", subject = "emptyStateLinkClickHandler")
     private void lexgraphInputsTableEmptyStateLinkClickHandler(
             Table.EmptyStateClickEvent<LexgraphInput> emptyStateClickEvent) {
-
+        LexgraphInput newL = new LexgraphInput();
+        newL.setInput("");
+        newL.setInputType("String");
+        lexgraphInputsDc.setItem(newL);
+        lexgraphInputsTable.setItems((TableItems) lexgraphInputsDc);
     }
 
     @Subscribe("saveBtn")
@@ -121,7 +123,8 @@ public class MainScreen extends Screen {
     @Subscribe("countBtn")
     protected void  onCountButtonClick(Button.ClickEvent event) {
         if(tasksCbx.getValue().equals("Magic square")){
-            dataM.countOutputData( inputDataM, MagNum);
+            dataM.countOutputData(inputDataM, MagNum);
+
         }
         else if(tasksCbx.getValue().equals("Lexical graf")){
             dataL.countOutputData(inputDataL);
@@ -139,6 +142,17 @@ public class MainScreen extends Screen {
             lexgraphInputsTable.setVisible(false);
             lexgraphInputsTable1.setVisible(false);
             magNumInputsTable.setVisible(true);
+            ///for(int i = 0; i < 9; i++){
+                MagNumInput newmn = new MagNumInput();
+                newmn.setId(null);
+                newmn.setInput(1);
+                newmn.setMagNumDataClass(dataM);
+                //magNumInputsDl.
+                magNumInputsDc.setItem(newmn);
+                magNumInputsTable.setItems(new ContainerTableItems<>(magNumInputsDc));
+                //inputDataM.add(newmn);
+            //}
+
         }
         else if(tasksCbx.getValue().equals("Lexical graf")){
             taskType = 1;
