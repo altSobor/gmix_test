@@ -79,14 +79,7 @@
                 </query>
             </loader>
         </collection>
-        <collection id="magNumInputsDc" class="com.company.test4.entity.MagNumInput">
-            <fetchPlan extends="_base"/>
-            <loader id="magNumInputsDl">
-                <query>
-                    <![CDATA[select e from MagNumInput e]]>
-                </query>
-            </loader>
-        </collection>
+
         <collection id="outputsDc" class="com.company.test4.entity.Output">
             <fetchPlan extends="_base"/>
             <loader id="outputsDl">
@@ -121,13 +114,23 @@
                             <column id="Input" caption="Substring" editable="true"/>
                         </columns>
                     </table>
-                    <table id="magNumInputsTable" dataContainer="magNumInputsDc" height="200px" width="200px"
-                           visible="false" editable="true" columnHeaderVisible="false">
-                        <columns>
-                            <column id="input" width="66px" editable="true"/>
-                        </columns>
-                    </table>
-
+                    <vbox id="magicNumInputField" spacing="true" visible="false">
+                        <hbox spacing="true">
+                            <textField id="tbInput00" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput01" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput02" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbInput10" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput11" maxLength="1" width="40px" datatype="double"/>
+                            <textField id="tbInput12" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbInput20" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput21" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput22" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                    </vbox>
                 </hbox>
 
                 <hbox spacing="true" align="TOP_CENTER">
@@ -139,6 +142,29 @@
                             <column id="Output"/>
                         </columns>
                     </table>
+                    <vbox id="magicNumOutputField" spacing="true" visible="false">
+                        <hbox spacing="true">
+                            <textField id="tbOutput00" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput01" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput02" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbOutput10" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput11" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput12" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbOutput20" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput21" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput22" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true" align="TOP_CENTER">
+                            <label id="costT"
+                                   stylename="jmix-login-caption"
+                                   value="Cost"/>
+                            <textField id="costTF" width="100px" maxLength="1" editable="false"/>
+                        </hbox>
+                    </vbox>
                 </hbox>
                 <buttonsPanel id="buttonsPanel"
                               alwaysVisible="true" align="MIDDLE_CENTER">
@@ -148,7 +174,6 @@
                                        fileStoragePutMode="MANUAL"/>
                     <button id="importBtn" caption="Import" align="MIDDLE_CENTER"/>
                 </buttonsPanel>
-
             </vbox>
         </vbox>
     </layout>

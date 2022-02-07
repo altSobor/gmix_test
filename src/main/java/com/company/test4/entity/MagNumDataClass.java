@@ -8,8 +8,7 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @JmixEntity
 @Entity
@@ -55,7 +54,7 @@ public class MagNumDataClass extends DataClass {
         return String.format("%s", getId());
     }
 
-    public List<Output> countOutputData(List<MagNumInput> inputData, ArrayList<int[][]> magQuard){
+    public List<Output> countOutputData(ArrayList<int[][]> magQuard){
         int count = 0;
         int cost = 0;
         int totalCost = 0;
@@ -63,7 +62,7 @@ public class MagNumDataClass extends DataClass {
             cost = 0;
             for(int i = 0; i < 3; i++){
                 for(int j = 0; j < 3; j++){
-                    cost =+ Math.abs(magQuard.get(n)[i][j] - inputData.get(i*3+j).input);
+                    cost = cost + Math.abs(magQuard.get(n)[i][j] - inputData.get(i*3+j).input);
                 }
             }
             if(n==0||cost<totalCost){
@@ -71,16 +70,17 @@ public class MagNumDataClass extends DataClass {
                 totalCost = cost;
             }
         }
+        List<Output> out = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Output magNums = new Output();
-                magNums.output = Integer.toString(magQuard.get(count)[i][j]);
-                super.outputData.add(magNums);
+                magNums.setOutput(Integer.toString(magQuard.get(count)[i][j]));
+                out.add(magNums);
             }
         }
         Output costs = new Output();
-        costs.output = Integer.toString(totalCost);
-        super.outputData.add(costs);
-        return super.outputData;
+        costs.setOutput(Integer.toString(totalCost));
+        out.add(costs);
+        return out;
     }
 }
