@@ -1,15 +1,19 @@
 package com.company.test4.entity;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.data.DbView;
 
 import javax.persistence.*;
 import java.util.UUID;
 
+@DbView
 @JmixEntity
 @Table(name = "MAG_NUM_INPUT")
 @Entity
 public class MagNumInput {
+    @InstanceName
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id

@@ -8,27 +8,42 @@ import io.jmix.core.metamodel.annotation.JmixEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 @JmixEntity
-@Entity
+@Entity(name = "sampler_LexgraphDataClass")
 public class LexgraphDataClass extends DataClass {
     @Column(name = "STR_COUNT")
     private Integer strCount;
+
+    @Composition
+    @OneToMany(mappedBy = "lexgraphDataClass")
+    private List<LexgraphInput> inputSubStrData;
 
     @Column(name = "SUB_STR_COUNT")
     private Integer subStrCount;
 
     @Composition
     @OneToMany(mappedBy = "lexgraphDataClass")
-    private List<LexgraphInput> inputData;
+    private List<LexgraphInput> inputStrData;
 
-    public List<LexgraphInput> getInputData() {
-        return inputData;
+    public List<LexgraphInput> getInputSubStrData() {
+        return inputSubStrData;
     }
 
-    public void setInputData(List<LexgraphInput> inputData) {
-        this.inputData = inputData;
+    public void setInputSubStrData(List<LexgraphInput> inputSubStrData) {
+        this.inputSubStrData = inputSubStrData;
+    }
+
+    public List<LexgraphInput> getInputStrData() {
+        return inputStrData;
+    }
+
+    public void setInputStrData(List<LexgraphInput> inputStrData) {
+        this.inputStrData = inputStrData;
     }
 
     public Integer getSubStrCount() {
@@ -53,17 +68,53 @@ public class LexgraphDataClass extends DataClass {
         return String.format("%s", getId());
     }
 
-    public List<Output> countOutputData(List<LexgraphInput> inputData){
-        for(int i = 0; i < strCount; i++){
-            for(int j = strCount; j < subStrCount; j++){
-                if(inputData.get(i).input.toLowerCase().contains(inputData.get(j).input.toLowerCase())){
+    public List<Output> countOutputData(){
+        List<Output> outputList = new ArrayList<Output>();
+        for(int i = 0; i < inputStrData.size(); i++){
+            for(int j = 0; j < inputSubStrData.size(); j++){
+                if(inputStrData.get(i).getInput().toLowerCase().contains(inputSubStrData.get(j).getInput().toLowerCase())){
                     Output outputs = new Output();
-                    outputs.output = inputData.get(j).input;
-                    super.outputData.add(outputs);
-                    break;
+                    outputs.setOutput(inputSubStrData.get(j).getInput());
+                    outputList.add(outputs);
+
                 }
+                //break;
             }
         }
-        return super.outputData;
+        return outputList;
+    }
+
+    public String setSaveStringLexgreph(){
+        String ldc = "\""+super.getTaskType().toString()+"\";\""+getStrCount().toString()+"\";\""+getSubStrCount().toString();
+        for(int i = 0; i < getStrCount(); i++){
+            ldc = ldc + getInputStrData().get(i).getInput() + ";";
+        }
+        ldc = ldc + "\";\"";
+        for(int i = 0; i < getSubStrCount(); i++){
+            ldc = ldc + getInputSubStrData().get(i).getInput() + ";";
+        }
+        ldc = ldc + "\"";
+        return ldc;
+    }
+
+    public void getSaveStringLexgreph(String ldc){
+        String[] splitedLDC = ldc.split("\";\"");
+        super.setTaskType(parseInt(splitedLDC[0].replace("\"", "")));
+        setStrCount(parseInt(splitedLDC[1]));
+        setSubStrCount(parseInt(splitedLDC[2]));
+        String[] splitedInputStrings = splitedLDC[3].split(";");
+        for(int i = 0; i < getStrCount(); i++){
+            LexgraphInput li = new LexgraphInput();
+            li.setInputType("String");
+            li.setInput(splitedInputStrings[i]);
+            getInputStrData().add(li);
+        }
+        String[] splitedInputSubStrings = splitedLDC[4].replace("\"", "").split(";");
+        for(int i = 0; i < getSubStrCount(); i++){
+            LexgraphInput li = new LexgraphInput();
+            li.setInputType("SubString");
+            li.setInput(splitedInputSubStrings[i]);
+            getInputSubStrData().add(li);
+        }
     }
 }

@@ -1,180 +1,43 @@
-<!DOCTYPE window [
-        <!ELEMENT window (data|layout)*>
-        <!ATTLIST window
-                xmlns CDATA #REQUIRED
-                caption CDATA #REQUIRED>
-        <!ELEMENT data (collection)*>
-        <!ELEMENT collection (fetchPlan|loader)*>
-        <!ATTLIST collection
-                class CDATA #REQUIRED
-                id CDATA #REQUIRED>
-        <!ELEMENT fetchPlan (#PCDATA)>
-        <!ATTLIST fetchPlan
-                extends CDATA #REQUIRED>
-        <!ELEMENT loader (query)*>
-        <!ATTLIST loader
-                id CDATA #REQUIRED>
-        <!ELEMENT query (#PCDATA)>
-        <!ELEMENT layout (vbox)*>
-        <!ELEMENT vbox (hbox|vbox|buttonsPanel)*>
-        <!ATTLIST vbox
-                align CDATA #REQUIRED
-                spacing CDATA #REQUIRED>
-        <!ELEMENT hbox (label|comboBox|table|button)*>
-        <!ATTLIST hbox
-                align CDATA #REQUIRED
-                spacing CDATA #REQUIRED>
-        <!ELEMENT label (#PCDATA)>
-        <!ATTLIST label
-                id CDATA #REQUIRED
-                stylename CDATA #REQUIRED
-                value CDATA #REQUIRED>
-        <!ELEMENT comboBox (#PCDATA)>
-        <!ATTLIST comboBox
-                id CDATA #REQUIRED
-                nullOptionVisible CDATA #REQUIRED
-                stylename CDATA #REQUIRED
-                textInputAllowed CDATA #REQUIRED>
-        <!ELEMENT table (columns)*>
-        <!ATTLIST table
-                align CDATA #IMPLIED
-                columnHeaderVisible CDATA #IMPLIED
-                dataContainer CDATA #REQUIRED
-                emptyStateLinkMessage CDATA #IMPLIED
-                height CDATA #REQUIRED
-                id CDATA #REQUIRED
-                visible CDATA #IMPLIED
-                width CDATA #REQUIRED>
-        <!ELEMENT columns (column)*>
-        <!ELEMENT column (#PCDATA)>
-        <!ATTLIST column
-                id CDATA #REQUIRED>
-        <!ELEMENT button (#PCDATA)>
-        <!ATTLIST button
-                align CDATA #IMPLIED
-                caption CDATA #REQUIRED
-                id CDATA #REQUIRED>
-        <!ELEMENT buttonsPanel (button)*>
-        <!ATTLIST buttonsPanel
-                id CDATA #REQUIRED
-                alwaysVisible CDATA #REQUIRED
-                align CDATA #REQUIRED>
-        ]>
 <window xmlns="http://jmix.io/schema/ui/window"
         caption="msg://application.caption">
-    <data>
-        <collection id="lexgraphInputsDc" class="com.company.test4.entity.LexgraphInput">
-            <fetchPlan extends="_base"/>
-            <loader id="lexgraphInputsDl">
-                <query>
-                    <![CDATA[select e from LexgraphInput e]]>
-                </query>
-            </loader>
-        </collection>
-        <collection id="lexgraphInputsDc_1" class="com.company.test4.entity.LexgraphInput">
-            <fetchPlan extends="_base"/>
-            <loader id="lexgraphInputsDl1">
-                <query>
-                    <![CDATA[select e from LexgraphInput e]]>
-                </query>
-            </loader>
-        </collection>
-
-        <collection id="outputsDc" class="com.company.test4.entity.Output">
-            <fetchPlan extends="_base"/>
-            <loader id="outputsDl">
-                <query>
-                    <![CDATA[select e from Output_ e]]>
-                </query>
-            </loader>
-        </collection>
-    </data>
-
     <layout>
-        <vbox spacing="true" align="MIDDLE_CENTER">
-            <hbox spacing="true" align="TOP_CENTER">
-                <label id="taskSelectLbl"
-                       stylename="jmix-login-caption"
-                       value="Select task"/>
-                <comboBox id="tasksCbx"
-                          nullOptionVisible="false"
-                          stylename="jmix-login-locale"
-                          textInputAllowed="false"/>
-            </hbox>
-            <vbox spacing="true" align="MIDDLE_CENTER">
-                <hbox spacing="true" align="MIDDLE_CENTER">
-                    <table id="lexgraphInputsTable" editable="true" dataContainer="lexgraphInputsDc" height="200px" width="200px" align="MIDDLE_CENTER" emptyStateLinkMessage="Add">
-                        <columns>
-                            <column id="Input" caption="String" editable="true"/>
-                        </columns>
-                    </table>
-                    <table id="lexgraphInputsTable1" dataContainer="lexgraphInputsDc_1" height="200px" width="200px" emptyStateLinkMessage="Add"
-                           align="MIDDLE_CENTER" editable="true">
-                        <columns>
-                            <column id="Input" caption="Substring" editable="true"/>
-                        </columns>
-                    </table>
-                    <vbox id="magicNumInputField" spacing="true" visible="false">
-                        <hbox spacing="true">
-                            <textField id="tbInput00" maxLength="1" width="40px" datatype="int"/>
-                            <textField id="tbInput01" maxLength="1" width="40px" datatype="int"/>
-                            <textField id="tbInput02" maxLength="1" width="40px" datatype="int"/>
-                        </hbox>
-                        <hbox spacing="true">
-                            <textField id="tbInput10" maxLength="1" width="40px" datatype="int"/>
-                            <textField id="tbInput11" maxLength="1" width="40px" datatype="double"/>
-                            <textField id="tbInput12" maxLength="1" width="40px" datatype="int"/>
-                        </hbox>
-                        <hbox spacing="true">
-                            <textField id="tbInput20" maxLength="1" width="40px" datatype="int"/>
-                            <textField id="tbInput21" maxLength="1" width="40px" datatype="int"/>
-                            <textField id="tbInput22" maxLength="1" width="40px" datatype="int"/>
-                        </hbox>
-                    </vbox>
-                </hbox>
-
-                <hbox spacing="true" align="TOP_CENTER">
-                    <button id="countBtn" caption="Count"/>
-                </hbox>
-                <hbox spacing="true" align="MIDDLE_CENTER">
-                    <table id="outputsTable" dataContainer="outputsDc" height="200px" width="200px" align="MIDDLE_CENTER">
-                        <columns>
-                            <column id="Output"/>
-                        </columns>
-                    </table>
-                    <vbox id="magicNumOutputField" spacing="true" visible="false">
-                        <hbox spacing="true">
-                            <textField id="tbOutput00" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput01" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput02" width="40px" maxLength="1" editable="false"/>
-                        </hbox>
-                        <hbox spacing="true">
-                            <textField id="tbOutput10" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput11" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput12" width="40px" maxLength="1" editable="false"/>
-                        </hbox>
-                        <hbox spacing="true">
-                            <textField id="tbOutput20" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput21" width="40px" maxLength="1" editable="false"/>
-                            <textField id="tbOutput22" width="40px" maxLength="1" editable="false"/>
-                        </hbox>
-                        <hbox spacing="true" align="TOP_CENTER">
-                            <label id="costT"
-                                   stylename="jmix-login-caption"
-                                   value="Cost"/>
-                            <textField id="costTF" width="100px" maxLength="1" editable="false"/>
-                        </hbox>
-                    </vbox>
-                </hbox>
-                <buttonsPanel id="buttonsPanel"
-                              alwaysVisible="true" align="MIDDLE_CENTER">
-                    <button id="saveBtn" caption="Save" align="MIDDLE_CENTER"/>
-                    <button id="exportBtn" caption="Export" align="MIDDLE_CENTER"/>
-                    <fileStorageUpload id="uploadBtn" accept="*.txt"
-                                       fileStoragePutMode="MANUAL"/>
-                    <button id="importBtn" caption="Import" align="MIDDLE_CENTER"/>
-                </buttonsPanel>
-            </vbox>
-        </vbox>
+        <cssLayout id="horizontalWrap"
+                   stylename="jmix-drawer-layout">
+            <drawer id="drawer" expandOnHover="true">
+                <cssLayout id="appTitleBox"
+                           stylename="jmix-drawer-header"
+                           width="100%">
+                    <image id="logoImage"
+                           stylename="app-icon"
+                           scaleMode="SCALE_DOWN">
+                        <resource>
+                            <theme path="branding/app-icon-menu.svg"/>
+                        </resource>
+                    </image>
+                    <label id="appTitleLabel"
+                           stylename="app-title"
+                           value="msg://application.logoLabel"/>
+                </cssLayout>
+                <sideMenu id="sideMenu"
+                          width="100%"
+                          stylename="jmix-drawer-content"/>
+                <timeZoneIndicator id="timeZoneIndicator"
+                                   align="MIDDLE_CENTER"/>
+                <cssLayout id="controlBox"
+                           stylename="jmix-drawer-footer"
+                           width="100%">
+                    <button id="collapseDrawerButton"
+                            icon="CHEVRON_LEFT"
+                            stylename="jmix-drawer-collapse-button"
+                            description="msg://sideMenuCollapse"/>
+                </cssLayout>
+            </drawer>
+            <workArea id="workArea"
+                      stylename="jmix-workarea"
+                      height="100%">
+                <initialLayout spacing="true" margin="true">
+                </initialLayout>
+            </workArea>
+        </cssLayout>
     </layout>
 </window>

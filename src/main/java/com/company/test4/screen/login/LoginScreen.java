@@ -21,7 +21,30 @@ import org.springframework.security.authentication.LockedException;
 
 import java.util.Locale;
 
-public class LoginScreen{
+@UiController("LoginScreen")
+@UiDescriptor("login-screen.xml")
+@Route(path = "login", root = true)
+public class LoginScreen extends Screen {
+
+    @Autowired
+    private TextField<String> usernameField;
+
+    @Autowired
+    private PasswordField passwordField;
+
+    @Autowired
+    private CheckBox rememberMeCheckBox;
+
+    @Autowired
+    private ComboBox<Locale> localesField;
+
+    @Autowired
+    private Notifications notifications;
+    @Autowired
+    private Messages messages;
+
+    @Autowired
+    private MessageTools messageTools;
 
     @Autowired
     private LoginScreenSupport loginScreenSupport;
@@ -32,11 +55,77 @@ public class LoginScreen{
     @Autowired
     private JmixApp app;
 
+    private final Logger log = LoggerFactory.getLogger(LoginScreen.class);
+    @Autowired
+    private Action submit;
+    @Autowired
+    private Button loginButton;
+
     @Subscribe
-    private void onInit() {
-        loginScreenSupport.authenticate(
-                AuthDetails.of(loginProperties.getDefaultUsername(), loginProperties.getDefaultPassword())
-                        .withLocale(app.getLocale())
-                        .withRememberMe(true), (FrameOwner) this);
+    private void onInit(InitEvent event) {
+        usernameField.focus();
+        initLocalesField();
+        initDefaultCredentials();
+    }
+    @Subscribe
+    private void afterInit(InitEvent event) {
+        submit.actionPerform(loginButton);
+    }
+    private void initLocalesField() {
+        localesField.setOptionsMap(messageTools.getAvailableLocalesMap());
+        localesField.setValue(app.getLocale());
+        localesField.addValueChangeListener(this::onLocalesFieldValueChangeEvent);
+    }
+
+    private void onLocalesFieldValueChangeEvent(HasValue.ValueChangeEvent<Locale> event) {
+        //noinspection ConstantConditions
+        app.setLocale(event.getValue());
+        UiControllerUtils.getScreenContext(this).getScreens()
+                .create(this.getClass(), OpenMode.ROOT)
+                .show();
+    }
+
+    private void initDefaultCredentials() {
+        String defaultUsername = loginProperties.getDefaultUsername();
+        if (!StringUtils.isBlank(defaultUsername) && !"<disabled>".equals(defaultUsername)) {
+            usernameField.setValue(defaultUsername);
+        } else {
+            usernameField.setValue("");
+        }
+
+        String defaultPassword = loginProperties.getDefaultPassword();
+        if (!StringUtils.isBlank(defaultPassword) && !"<disabled>".equals(defaultPassword)) {
+            passwordField.setValue(defaultPassword);
+        } else {
+            passwordField.setValue("");
+        }
+    }
+
+    @Subscribe("submit")
+    private void onSubmitActionPerformed(Action.ActionPerformedEvent event) {
+        login();
+    }
+
+    private void login() {
+        if (StringUtils.isEmpty(loginProperties.getDefaultUsername()) || StringUtils.isEmpty(loginProperties.getDefaultPassword())) {
+            notifications.create(Notifications.NotificationType.WARNING)
+                    .withCaption(messages.getMessage(getClass(), "emptyUsernameOrPassword"))
+                    .show();
+            return;
+        }
+
+        try {
+            loginScreenSupport.authenticate(
+                    AuthDetails.of(loginProperties.getDefaultUsername(), loginProperties.getDefaultPassword())
+                            .withLocale(localesField.getValue())
+                            .withRememberMe(rememberMeCheckBox.isChecked()), this);
+        } catch (BadCredentialsException | DisabledException | LockedException e) {
+            log.info("Login failed", e);
+            notifications.create(Notifications.NotificationType.ERROR)
+                    .withCaption(messages.getMessage(getClass(), "loginFailed"))
+                    .withDescription(messages.getMessage(getClass(), "badCredentials"))
+                    .show();
+        }
     }
 }
+

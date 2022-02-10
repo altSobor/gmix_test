@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://magNumDataClassEdit.caption"
+        focusComponent="form">
+    <data>
+        <instance id="magNumDataClassDc"
+                  class="com.company.test4.entity.MagNumDataClass">
+            <fetchPlan extends="_base">
+                <property name="inputData" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+            <collection id="inputDataDc" property="inputData"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout spacing="true" expand="editActions">
+        <form id="form" dataContainer="magNumDataClassDc">
+            <column width="350px">
+                <dateField id="dateTimeField" property="dateTime"/>
+                <textField id="taskTypeField" property="taskType"/>
+                <textField id="minCostField" property="minCost"/>
+            </column>
+        </form>
+        <groupBox id="inputDataBox" caption="msg://com.company.test4.entity/MagNumDataClass.inputData">
+            <table id="inputDataTable" dataContainer="inputDataDc" width="100%" height="200px">
+                <actions>
+                    <action id="create" type="create"/>
+                    <action id="edit" type="edit"/>
+                    <action id="remove" type="remove"/>
+                </actions>
+                <columns>
+                    <column id="input"/>
+                </columns>
+                <buttonsPanel>
+                    <button action="inputDataTable.create"/>
+                    <button action="inputDataTable.edit"/>
+                    <button action="inputDataTable.remove"/>
+                </buttonsPanel>
+            </table>
+        </groupBox>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

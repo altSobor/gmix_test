@@ -4,6 +4,11 @@
     <menu id="application" caption="msg://com.company.test4/menu.application" insertBefore="administration">
         <item screen="User.browse" caption="msg://com.company.test4.screen.user/UserBrowse.caption"/>
         <item screen="themeSettingsScreen" caption="msg://io.jmix.ui.app.themesettings/themeSettings.caption"/>
+        <item screen="LexgraphDataClass.browse"
+              caption="msg://com.company.test4.screen.lexgraphdataclass/lexgraphDataClassBrowse.menu"/>
+        <item screen="MagNumDataClass.browse"
+              caption="msg://com.company.test4.screen.magnumdataclass/magNumDataClassBrowse.menu"/>
+        <item screen="StartScreen" caption="msg://com.company.test4.screen.start/startScreen.caption"/>
     </menu>
 
 </menu-config>

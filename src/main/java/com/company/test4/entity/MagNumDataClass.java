@@ -4,33 +4,26 @@ import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
+import io.jmix.data.DbView;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 @JmixEntity
-@Entity
+@Entity (name = "sampler_MagNumDataClass")
 public class MagNumDataClass extends DataClass {
 
     @Column(name = "MIN_COST")
     private Integer minCost;
 
-    @Column(name = "STR_SUM")
-    private Integer strSum;
-
     @Composition
     @OneToMany(mappedBy = "magNumDataClass")
     private List<MagNumInput> inputData;
-
-    public void setStrSum(Integer strSum) {
-        this.strSum = strSum;
-    }
-
-    public Integer getStrSum() {
-        return strSum;
-    }
 
     public List<MagNumInput> getInputData() {
         return inputData;
@@ -82,5 +75,25 @@ public class MagNumDataClass extends DataClass {
         costs.setOutput(Integer.toString(totalCost));
         out.add(costs);
         return out;
+    }
+
+    public String setSaveStringMagNum(){
+        String mnc = "\""+super.getTaskType().toString()+"\";\"";
+        for(int i = 0; i < 9; i++){
+            mnc = mnc + getInputData().get(i).getInput().toString() + ";";
+        }
+        mnc = mnc + "\"";
+        return mnc;
+    }
+
+    public void getSaveStringMagNum(String mnc){
+        String[] splitedMNC = mnc.split("\";\"");
+        super.setTaskType(parseInt(splitedMNC[0].replace("\"", "")));
+        String[] splitedInput = splitedMNC[1].split(";");
+        for(int i = 0; i < 9; i++){
+            MagNumInput mi = new MagNumInput();
+            mi.setInput(parseInt(splitedInput[i]));
+            getInputData().add(mi);
+        }
     }
 }

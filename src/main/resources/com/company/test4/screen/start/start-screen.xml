@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://startScreen.caption">
+
+    <data>
+        <collection id="lexgraphInputsDc" class="com.company.test4.entity.LexgraphInput">
+            <fetchPlan extends="_base"/>
+            <loader id="lexgraphInputsDl">
+                <query>
+                    <![CDATA[select e from LexgraphInput e]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="lexgraphInputsDc_1" class="com.company.test4.entity.LexgraphInput">
+            <fetchPlan extends="_base"/>
+            <loader id="lexgraphInputsDl1">
+                <query>
+                    <![CDATA[select e from LexgraphInput e]]>
+                </query>
+            </loader>
+        </collection>
+
+        <collection id="outputsDc" class="com.company.test4.entity.Output">
+            <fetchPlan extends="_base"/>
+            <loader id="outputsDl">
+                <query>
+                    <![CDATA[select e from Output_ e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <layout>
+        <vbox spacing="true" align="MIDDLE_CENTER">
+            <hbox spacing="true" align="TOP_CENTER">
+                <label id="taskSelectLbl"
+                       stylename="jmix-login-caption"
+                       value="Select task"/>
+                <comboBox id="tasksCbx"
+                          nullOptionVisible="false"
+                          stylename="jmix-login-locale"
+                          textInputAllowed="false"/>
+            </hbox>
+            <vbox spacing="true" align="MIDDLE_CENTER">
+                <hbox spacing="true" align="MIDDLE_CENTER">
+                    <vbox spacing="true" align="MIDDLE_CENTER">
+                        <table id="lexgraphInputsTable" dataContainer="lexgraphInputsDc" height="300px" width="400px" emptyStateLinkMessage="Add"
+                               editable="true">
+                            <columns>
+                                <column id="input" editable="true"/>
+                            </columns>
+                        </table>
+                        <button id="addString" caption="Add" width="500px"/>
+
+                    </vbox>
+                    <vbox spacing="true" align="MIDDLE_CENTER">
+                        <table id="lexgraphInputsTable1" dataContainer="lexgraphInputsDc_1" height="300px" width="500px" emptyStateLinkMessage="Add"
+                               align="MIDDLE_CENTER" textSelectionEnabled="true" editable="true">
+                            <columns>
+                                <column id="input" editable="true"/>
+                            </columns>
+                        </table>
+                        <button id="addSubString" caption="Add" width="500px"/>
+                    </vbox>
+                    <vbox id="magicNumInputField" spacing="true" visible="false">
+                        <hbox spacing="true">
+                            <textField id="tbInput00" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput01" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput02" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbInput10" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput11" maxLength="1" width="40px" datatype="double"/>
+                            <textField id="tbInput12" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbInput20" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput21" maxLength="1" width="40px" datatype="int"/>
+                            <textField id="tbInput22" maxLength="1" width="40px" datatype="int"/>
+                        </hbox>
+                    </vbox>
+                </hbox>
+
+                <hbox spacing="true" align="TOP_CENTER">
+                    <button id="countBtn" caption="Count"/>
+                </hbox>
+                <hbox spacing="true" align="MIDDLE_CENTER">
+                    <table id="outputsTable" dataContainer="outputsDc" height="300px" width="400px" align="MIDDLE_CENTER">
+                        <columns>
+                            <column id="output"/>
+                        </columns>
+                    </table>
+                    <vbox id="magicNumOutputField" spacing="true" visible="false">
+                        <hbox spacing="true">
+                            <textField id="tbOutput00" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput01" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput02" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbOutput10" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput11" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput12" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true">
+                            <textField id="tbOutput20" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput21" width="40px" maxLength="1" editable="false"/>
+                            <textField id="tbOutput22" width="40px" maxLength="1" editable="false"/>
+                        </hbox>
+                        <hbox spacing="true" align="TOP_CENTER">
+                            <label id="costT"
+                                   stylename="jmix-login-caption"
+                                   value="Cost"/>
+                            <textField id="costTF" width="100px" maxLength="1" editable="false"/>
+                        </hbox>
+                    </vbox>
+                </hbox>
+                <buttonsPanel id="buttonsPanel"
+                              alwaysVisible="true" align="MIDDLE_CENTER">
+                    <button id="saveBtn" caption="Save" align="MIDDLE_CENTER"/>
+                    <button id="exportBtn" caption="Export" align="MIDDLE_CENTER"/>
+                    <fileStorageUpload id="uploadBtn" accept="*.txt"
+                                       fileStoragePutMode="MANUAL"/>
+                    <button id="importBtn" caption="Import" align="MIDDLE_CENTER"/>
+                </buttonsPanel>
+            </vbox>
+        </vbox>
+    </layout>
+</window>

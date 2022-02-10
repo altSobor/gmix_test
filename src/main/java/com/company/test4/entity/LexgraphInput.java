@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @JmixEntity
 @Table(name = "LEXGRAPH_INPUT")
-@Entity
+@Entity(name = "LexgraphInput")
 public class LexgraphInput {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
