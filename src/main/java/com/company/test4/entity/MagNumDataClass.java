@@ -4,9 +4,7 @@ import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.DependsOnProperties;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
-import io.jmix.data.DbView;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -15,11 +13,8 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @JmixEntity
-@Entity (name = "sampler_MagNumDataClass")
+@Entity(name = "sampler_MagNumDataClass")
 public class MagNumDataClass extends DataClass {
-
-    @Column(name = "MIN_COST")
-    private Integer minCost;
 
     @Composition
     @OneToMany(mappedBy = "magNumDataClass")
@@ -31,14 +26,6 @@ public class MagNumDataClass extends DataClass {
 
     public void setInputData(List<MagNumInput> inputData) {
         this.inputData = inputData;
-    }
-
-    public Integer getMinCost() {
-        return minCost;
-    }
-
-    public void setMinCost(Integer minCost) {
-        this.minCost = minCost;
     }
 
     @InstanceName

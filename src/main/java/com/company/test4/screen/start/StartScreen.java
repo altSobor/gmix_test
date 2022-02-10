@@ -18,9 +18,12 @@ import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Named;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static java.lang.Integer.parseInt;
 
 
 @UiController("StartScreen")
@@ -66,8 +69,8 @@ public class StartScreen extends Screen {
     private CollectionLoader<LexgraphInput> lexgraphInputsDl1;
     @Autowired
     private CollectionLoader<LexgraphInput> lexgraphInputsDl;
-    private MagNumDataClass dataM;
-    private LexgraphDataClass dataL;
+    private MagNumDataClass dataM = new MagNumDataClass();
+    private LexgraphDataClass dataL = new LexgraphDataClass();
     ArrayList<int[][]> MagNum = new ArrayList<int[][]>();
     ExecutorService executor = Executors.newFixedThreadPool(1);
     CounterThread counterThread = new CounterThread(15);
@@ -133,6 +136,7 @@ public class StartScreen extends Screen {
             magNumInput.setInput(i+1);
             inputDataM.add(magNumInput);
         }
+        dataM.setTaskType(0);
         dataM.setInputData(inputDataM);
         tbInput00.setValue(dataM.getInputData().get(0).getInput());
         tbInput01.setValue(dataM.getInputData().get(1).getInput());
@@ -144,9 +148,10 @@ public class StartScreen extends Screen {
         tbInput21.setValue(dataM.getInputData().get(7).getInput());
         tbInput22.setValue(dataM.getInputData().get(8).getInput());
 
-        dataL = createLexgraphDataClass();
+        dataL.setTaskType(1);
         dataL.setInputStrData(inputStrData);
         dataL.setInputSubStrData(inputSubStrData);
+        dataL = createLexgraphDataClass();
     }
 
     LexgraphDataClass createLexgraphDataClass() {
@@ -170,10 +175,20 @@ public class StartScreen extends Screen {
     @Subscribe("saveBtn")
         protected void  onSaveButtonClick(Button.ClickEvent event) {
         if(tasksCbx.getValue().equals("Magic square")){
-
+            MagNumDataClass savedDataM = createMagNumClass();
+            savedDataM.setTaskType(dataM.getTaskType());
+            savedDataM.setDateTime(LocalDateTime.now());
+            List <MagNumInput> listMI = new ArrayList<MagNumInput>();
+            for(int i = 0; i < 9; i++){
+                MagNumInput mi = metadata.create(MagNumInput.class);
+                mi.setInput(dataM.getInputData().get(i).getInput());
+                mi.setMagNumDataClass(savedDataM);
+                listMI.add(mi);
+            }
+            savedDataM.setInputData(listMI);
         }
         else if(tasksCbx.getValue().equals("Lexical graf")){
-
+            dataL.setTaskType(1);
         }
     }
     @Subscribe("uploadBtn")

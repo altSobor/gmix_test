@@ -25,7 +25,7 @@ public class DataClass {
     private LocalDateTime dateTime;
 
     @Column(name = "TASK_TYPE")
-    private Integer taskType;
+    private Integer taskType;       //0 is for magic number class, 1 is for Lexgraph data class, 2 is for service Lexgraph data class - will be deleted after saving
 
     public LocalDateTime getDateTime() {
         return dateTime;
