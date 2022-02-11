@@ -387,14 +387,9 @@ public class StartScreen extends Screen {
     public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
         InputStream is = importBtn.getFileContent();
         String imported = "";
-        try {
-            imported = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-        }
-        catch (NullPointerException ex){
-            notifications.create()
-                    .withCaption("File reading error")
-                    .show();
-        }
+        assert is != null;
+        byte[] outputData = is.readAllBytes();
+        imported = new String(outputData, StandardCharsets.UTF_8);
         if(imported.charAt(1)=='0'){
             dataM = createMagNumClass();
             dataM.getSaveStringMagNum(imported);
