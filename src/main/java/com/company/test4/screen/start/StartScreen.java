@@ -386,7 +386,15 @@ public class StartScreen extends Screen {
     @Subscribe("importBtn")
     public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
         InputStream is = importBtn.getFileContent();
-        String imported = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        String imported = "";
+        try {
+            imported = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        catch (NullPointerException ex){
+            notifications.create()
+                    .withCaption("File reading error")
+                    .show();
+        }
         if(imported.charAt(1)=='0'){
             dataM = createMagNumClass();
             dataM.getSaveStringMagNum(imported);
