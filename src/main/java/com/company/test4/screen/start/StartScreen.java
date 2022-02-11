@@ -140,11 +140,11 @@ public class StartScreen extends Screen {
     public void onInit(InitEvent event) {
         executor.execute(counterThread);
         List<String> list = new ArrayList<>();
-        list.add("Magic square");
         list.add("Lexical graf");
+        list.add("Magic square");
 
         tasksCbx.setOptionsList(list);
-        tasksCbx.setValue("Lexical graf");
+        tasksCbx.setValue(list.get(0));
 
         for(int i = 0; i < 9; i++){
             MagNumInput magNumInput = new MagNumInput();
@@ -155,11 +155,18 @@ public class StartScreen extends Screen {
         dataM.setInputData(inputDataM);
         setMagNumValues();
 
-        dataL.setTaskType(1);
+        dataL = createLexgraphDataClass();
+        dataL.setTaskType(2);
         dataL.setInputStrData(inputStrData);
         dataL.setInputSubStrData(inputSubStrData);
-        dataL = createLexgraphDataClass();
+
     }
+
+    @Subscribe
+    protected void onBeforeClose(BeforeCloseEvent event) {
+
+    }
+
     void setMagNumValues(){
         tbInput00.setValue(dataM.getInputData().get(0).getInput());
         tbInput01.setValue(dataM.getInputData().get(1).getInput());
@@ -178,17 +185,6 @@ public class StartScreen extends Screen {
     MagNumDataClass createMagNumClass() {
         return metadata.create(MagNumDataClass.class);
     }
-
-/*    @Install(to = "lexgraphDataCreate", subject = "initializer")
-    private void lexgraphDataCreateInitializer(LexgraphDataClass lexgraphDataClass) {
-        lexgraphDataClass.setInputStrData(dataL.getInputStrData());
-        lexgraphDataClass.setInputSubStrData(dataL.getInputSubStrData());
-        lexgraphDataClass.setStrCount(dataL.getInputStrData().size());
-        lexgraphDataClass.setSubStrCount(dataL.getInputSubStrData().size());
-        lexgraphDataClass.setTaskType(0);
-        //lexgraphDataClass.setDateTime(timeSource.currentTimestamp());
-        //dataL.getInputSubStrData().add(lexgraphInput);
-    }*/
 
     @Subscribe("saveBtn")
         protected void  onSaveButtonClick(Button.ClickEvent event) {
@@ -230,25 +226,34 @@ public class StartScreen extends Screen {
     @Subscribe("countBtn")
     protected void  onCountButtonClick(Button.ClickEvent event) {
         if(taskType == 0){
-            List<Output> mnout = dataM.countOutputData(MagNum);
-            tbOutput00.setValue(mnout.get(0).getOutput());
-            tbOutput01.setValue(mnout.get(1).getOutput());
-            tbOutput02.setValue(mnout.get(2).getOutput());
-            tbOutput10.setValue(mnout.get(3).getOutput());
-            tbOutput11.setValue(mnout.get(4).getOutput());
-            tbOutput12.setValue(mnout.get(5).getOutput());
-            tbOutput20.setValue(mnout.get(6).getOutput());
-            tbOutput21.setValue(mnout.get(7).getOutput());
-            tbOutput22.setValue(mnout.get(8).getOutput());
-            costTF.setValue(mnout.get(9).getOutput());
+            countMagNum();
         }
         else if(taskType == 1){
-            List<Output> outputList = dataL.countOutputData();
-            for(int i = 0; i < outputList.size(); i++){
-                Output lo = metadata.create(Output.class);
-                lo.setOutput(outputList.get(i).getOutput());
-                outputsDc.getMutableItems().add(lo);
-            }
+            countLexGraph();
+        }
+    }
+
+    void countMagNum(){
+        List<Output> mnout = dataM.countOutputData(MagNum);
+        tbOutput00.setValue(mnout.get(0).getOutput());
+        tbOutput01.setValue(mnout.get(1).getOutput());
+        tbOutput02.setValue(mnout.get(2).getOutput());
+        tbOutput10.setValue(mnout.get(3).getOutput());
+        tbOutput11.setValue(mnout.get(4).getOutput());
+        tbOutput12.setValue(mnout.get(5).getOutput());
+        tbOutput20.setValue(mnout.get(6).getOutput());
+        tbOutput21.setValue(mnout.get(7).getOutput());
+        tbOutput22.setValue(mnout.get(8).getOutput());
+        costTF.setValue(mnout.get(9).getOutput());
+    }
+
+    void countLexGraph(){
+        outputsDc.getMutableItems().clear();
+        List<Output> outputList = dataL.countOutputData();
+        for(int i = 0; i < outputList.size(); i++){
+            Output lo = metadata.create(Output.class);
+            lo.setOutput(outputList.get(i).getOutput());
+            outputsDc.getMutableItems().add(lo);
         }
     }
 
@@ -320,6 +325,7 @@ public class StartScreen extends Screen {
         lexgraphInputsDc.getMutableItems().add(li);
         li.setInputType("String");
         dataL.getInputStrData().add(li);
+        dataL.setStrCount(lexgraphInputsDc.getMutableItems().size());
     }
     @Install(to = "lexgraphInputsTable1", subject = "emptyStateLinkClickHandler")
     private void lexgraphInputsTable1EmptyStateLinkClickHandler(Table.EmptyStateClickEvent<LexgraphInput> emptyStateClickEvent) {
@@ -327,6 +333,7 @@ public class StartScreen extends Screen {
         lexgraphInputsDc_1.getMutableItems().add(li);
         li.setInputType("Substring");
         dataL.getInputSubStrData().add(li);
+        dataL.setSubStrCount(lexgraphInputsDc_1.getMutableItems().size());
     }
     @Subscribe("addSubString")
     public void onAddSubStringClick(Button.ClickEvent event) {
@@ -334,6 +341,7 @@ public class StartScreen extends Screen {
         lexgraphInputsDc_1.getMutableItems().add(li);
         li.setInputType("Substring");
         dataL.getInputSubStrData().add(li);
+        dataL.setSubStrCount(lexgraphInputsDc_1.getMutableItems().size());
     }
     @Subscribe("addString")
     public void onAddStringClick(Button.ClickEvent event) {
@@ -341,26 +349,40 @@ public class StartScreen extends Screen {
         lexgraphInputsDc.getMutableItems().add(li);
         li.setInputType("String");
         dataL.getInputStrData().add(li);
+        dataL.setStrCount(lexgraphInputsDc.getMutableItems().size());
     }
 
     @Subscribe("importBtn")
     public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
-        //File file = temporaryStorage.ge//getFile(importBtn.getFileContent());
         InputStream is = importBtn.getFileContent();
         String imported = new String(is.readAllBytes(), StandardCharsets.UTF_8);
         if(imported.charAt(1)=='0'){
+            dataM = createMagNumClass();
             dataM.getSaveStringMagNum(imported);
             setMagNumValues();
+            countMagNum();
         }
-        else if(imported.charAt(1)=='1'){
+        else if(imported.charAt(1)=='1'||imported.charAt(1)=='2'){
+            dataL = createLexgraphDataClass();
             dataL.getSaveStringLexgreph(imported);
+            for(int i = 0; i < dataL.getStrCount(); i++){
+                LexgraphInput li = metadata.create(LexgraphInput.class);
+                lexgraphInputsDc.getMutableItems().add(li);
+                li.setInputType("String");
+                li.setInput(dataL.getInputStrData().get(i).getInput());
+            }
+            for(int i = 0; i < dataL.getSubStrCount(); i++){
+                LexgraphInput li = metadata.create(LexgraphInput.class);
+                lexgraphInputsDc_1.getMutableItems().add(li);
+                li.setInputType("Substring");
+                li.setInput(dataL.getInputSubStrData().get(i).getInput());
+            }
+            countLexGraph();
         }
         else{
             notifications.create()
                     .withCaption("Wrong file format")
                     .show();
         }
-
-        //File file = temporaryStorage.getFile(importBtn.getFileName());
     }
 }

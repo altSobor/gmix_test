@@ -85,19 +85,21 @@ public class LexgraphDataClass extends DataClass {
     }
 
     public String setSaveStringLexgreph(){
-        String ldc = "\""+super.getTaskType().toString()+"\";\""+getStrCount().toString()+"\";\""+getSubStrCount().toString();
-        for(int i = 0; i < getStrCount(); i++){
-            ldc = ldc + getInputStrData().get(i).getInput() + ";";
+        String ldc = "\""+super.getTaskType().toString()+"\";\"" + getStrCount().toString()+"\";\"" +  getSubStrCount().toString() + "\";\"";
+        for(int i = 0; i < strCount; i++){
+            ldc = ldc + inputStrData.get(i).getInput() + ";";
         }
         ldc = ldc + "\";\"";
-        for(int i = 0; i < getSubStrCount(); i++){
-            ldc = ldc + getInputSubStrData().get(i).getInput() + ";";
+        for(int i = 0; i < subStrCount; i++){
+            ldc = ldc + inputSubStrData.get(i).getInput() + ";";
         }
         ldc = ldc + "\"";
         return ldc;
     }
 
     public void getSaveStringLexgreph(String ldc){
+        inputStrData = new ArrayList<LexgraphInput>();
+        inputSubStrData = new ArrayList<LexgraphInput>();
         String[] splitedLDC = ldc.split("\";\"");
         super.setTaskType(parseInt(splitedLDC[0].replace("\"", "")));
         setStrCount(parseInt(splitedLDC[1]));
