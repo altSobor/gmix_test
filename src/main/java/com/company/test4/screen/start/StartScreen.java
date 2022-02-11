@@ -11,17 +11,27 @@ import io.jmix.ui.Screens;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.action.list.CreateAction;
 import io.jmix.ui.component.*;
+import io.jmix.ui.download.DownloadFormat;
+import io.jmix.ui.download.Downloader;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
+import javax.swing.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import static java.lang.Integer.parseInt;
 
@@ -34,9 +44,9 @@ public class StartScreen extends Screen {
     @Autowired
     ScreenBuilders screenBuilders;
     @Autowired
-    private Button importBtn;
+    private FileUploadField importBtn;
     @Autowired
-    private FileStorageUploadField uploadBtn;
+    private Button uploadBtn;
     @Autowired
     private Button exportBtn;
     @Autowired
@@ -121,6 +131,11 @@ public class StartScreen extends Screen {
     private TextField costTF;
     @Autowired
     private Screens screens;
+    @Autowired
+    private Button addSubString;
+    @Autowired
+    private Button addString;
+
     @Subscribe
     public void onInit(InitEvent event) {
         executor.execute(counterThread);
@@ -138,6 +153,14 @@ public class StartScreen extends Screen {
         }
         dataM.setTaskType(0);
         dataM.setInputData(inputDataM);
+        setMagNumValues();
+
+        dataL.setTaskType(1);
+        dataL.setInputStrData(inputStrData);
+        dataL.setInputSubStrData(inputSubStrData);
+        dataL = createLexgraphDataClass();
+    }
+    void setMagNumValues(){
         tbInput00.setValue(dataM.getInputData().get(0).getInput());
         tbInput01.setValue(dataM.getInputData().get(1).getInput());
         tbInput02.setValue(dataM.getInputData().get(2).getInput());
@@ -147,11 +170,6 @@ public class StartScreen extends Screen {
         tbInput20.setValue(dataM.getInputData().get(6).getInput());
         tbInput21.setValue(dataM.getInputData().get(7).getInput());
         tbInput22.setValue(dataM.getInputData().get(8).getInput());
-
-        dataL.setTaskType(1);
-        dataL.setInputStrData(inputStrData);
-        dataL.setInputSubStrData(inputSubStrData);
-        dataL = createLexgraphDataClass();
     }
 
     LexgraphDataClass createLexgraphDataClass() {
@@ -174,7 +192,7 @@ public class StartScreen extends Screen {
 
     @Subscribe("saveBtn")
         protected void  onSaveButtonClick(Button.ClickEvent event) {
-        if(tasksCbx.getValue().equals("Magic square")){
+        if(taskType == 0){
             MagNumDataClass savedDataM = createMagNumClass();
             savedDataM.setTaskType(dataM.getTaskType());
             savedDataM.setDateTime(LocalDateTime.now());
@@ -186,32 +204,32 @@ public class StartScreen extends Screen {
                 listMI.add(mi);
             }
             savedDataM.setInputData(listMI);
+            dataM = savedDataM;
         }
-        else if(tasksCbx.getValue().equals("Lexical graf")){
+        else if(taskType == 0){
             dataL.setTaskType(1);
+            dataL.setDateTime(LocalDateTime.now());
         }
     }
-    @Subscribe("uploadBtn")
-    public void onUploadBtnFileUploadStart(UploadField.FileUploadStartEvent event) {
-        /*File file = temporaryStorage.getFile(uploadBtn.getFileId());
-        if (file != null) {
-            notifications.create()
-                    .withCaption("File is uploaded to temporary storage at " + file.getAbsolutePath())
-                    .show();
-        }
-        file = null;*/
-    }
-    @Subscribe("importBtn")
-    protected void  onImportButtonClick(Button.ClickEvent event) {
-
-    }
+    @Autowired
+    private Downloader downloader;
     @Subscribe("exportBtn")
-    protected void  onExportButtonClick(Button.ClickEvent event) {
-
+    public void onExportBtnClick(Button.ClickEvent event) {
+        byte[] str = null;
+        if(taskType == 0){
+            str = dataM.setSaveStringMagNum().getBytes();
+        } else if(taskType == 1){
+            str = dataL.setSaveStringLexgreph().getBytes();
+        }
+        downloader.download(
+                str,
+                "item.txt",
+                DownloadFormat.TEXT
+        );
     }
     @Subscribe("countBtn")
     protected void  onCountButtonClick(Button.ClickEvent event) {
-        if(tasksCbx.getValue().equals("Magic square")){
+        if(taskType == 0){
             List<Output> mnout = dataM.countOutputData(MagNum);
             tbOutput00.setValue(mnout.get(0).getOutput());
             tbOutput01.setValue(mnout.get(1).getOutput());
@@ -224,7 +242,7 @@ public class StartScreen extends Screen {
             tbOutput22.setValue(mnout.get(8).getOutput());
             costTF.setValue(mnout.get(9).getOutput());
         }
-        else if(tasksCbx.getValue().equals("Lexical graf")){
+        else if(taskType == 1){
             List<Output> outputList = dataL.countOutputData();
             for(int i = 0; i < outputList.size(); i++){
                 Output lo = metadata.create(Output.class);
@@ -247,6 +265,8 @@ public class StartScreen extends Screen {
             lexgraphInputsTable1.setVisible(false);
             outputsTable.setVisible(false);
             magicNumOutputField.setVisible(true);
+            addString.setVisible(false);
+            addSubString.setVisible(false);
         }
         else if(tasksCbx.getValue().equals("Lexical graf")){
             taskType = 1;
@@ -321,5 +341,26 @@ public class StartScreen extends Screen {
         lexgraphInputsDc.getMutableItems().add(li);
         li.setInputType("String");
         dataL.getInputStrData().add(li);
+    }
+
+    @Subscribe("importBtn")
+    public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
+        //File file = temporaryStorage.ge//getFile(importBtn.getFileContent());
+        InputStream is = importBtn.getFileContent();
+        String imported = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        if(imported.charAt(1)=='0'){
+            dataM.getSaveStringMagNum(imported);
+            setMagNumValues();
+        }
+        else if(imported.charAt(1)=='1'){
+            dataL.getSaveStringLexgreph(imported);
+        }
+        else{
+            notifications.create()
+                    .withCaption("Wrong file format")
+                    .show();
+        }
+
+        //File file = temporaryStorage.getFile(importBtn.getFileName());
     }
 }

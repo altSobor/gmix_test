@@ -77,6 +77,7 @@ public class MagNumDataClass extends DataClass {
         String[] splitedMNC = mnc.split("\";\"");
         super.setTaskType(parseInt(splitedMNC[0].replace("\"", "")));
         String[] splitedInput = splitedMNC[1].split(";");
+        getInputData().clear();
         for(int i = 0; i < 9; i++){
             MagNumInput mi = new MagNumInput();
             mi.setInput(parseInt(splitedInput[i]));

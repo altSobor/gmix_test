@@ -43,7 +43,7 @@
             <vbox spacing="true" align="MIDDLE_CENTER">
                 <hbox spacing="true" align="MIDDLE_CENTER">
                     <vbox spacing="true" align="MIDDLE_CENTER">
-                        <table id="lexgraphInputsTable" dataContainer="lexgraphInputsDc" height="300px" width="400px" emptyStateLinkMessage="Add"
+                        <table id="lexgraphInputsTable" dataContainer="lexgraphInputsDc" height="300px" width="500px" emptyStateLinkMessage="Add"
                                editable="true">
                             <columns>
                                 <column id="input" editable="true"/>
@@ -117,9 +117,10 @@
                               alwaysVisible="true" align="MIDDLE_CENTER">
                     <button id="saveBtn" caption="Save" align="MIDDLE_CENTER"/>
                     <button id="exportBtn" caption="Export" align="MIDDLE_CENTER"/>
-                    <fileStorageUpload id="uploadBtn" accept="*.txt"
-                                       fileStoragePutMode="MANUAL"/>
-                    <button id="importBtn" caption="Import" align="MIDDLE_CENTER"/>
+
+                    <button id="uploadBtn" caption="Upload" align="MIDDLE_CENTER"/>
+                    <fileUpload id="importBtn" accept="*.txt" uploadButtonCaption="Import" buffered="true"/>
+
                 </buttonsPanel>
             </vbox>
         </vbox>
