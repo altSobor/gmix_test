@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -70,16 +72,30 @@ public class LexgraphDataClass extends DataClass {
 
     public List<Output> countOutputData(){
         List<Output> outputList = new ArrayList<Output>();
+        ArrayList<String> stringList = new ArrayList<String>();
         for(int i = 0; i < inputStrData.size(); i++){
+            int counter = 0;
             for(int j = 0; j < inputSubStrData.size(); j++){
                 if(inputStrData.get(i).getInput().toLowerCase().contains(inputSubStrData.get(j).getInput().toLowerCase())){
-                    Output outputs = new Output();
-                    outputs.setOutput(inputSubStrData.get(j).getInput());
-                    outputList.add(outputs);
+                    String str = inputSubStrData.get(j).getInput();
 
+                    for(int k = 0; k < stringList.size(); k++){
+                        if(stringList.get(k).equals(str)){
+                            counter++;
+                        }
+                    }
+                    if(counter==0){
+                        stringList.add(str);
+                    }
                 }
                 //break;
             }
+        }
+        Collections.sort(stringList);
+        for(int i = 0; i < stringList.size(); i++){
+            Output outputs = new Output();
+            outputs.setOutput(stringList.get(i));
+            outputList.add(outputs);
         }
         return outputList;
     }

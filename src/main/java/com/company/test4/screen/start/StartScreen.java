@@ -158,14 +158,9 @@ public class StartScreen extends Screen {
         setMagNumValues();
 
         dataL = createLexgraphDataClass();
-        dataL.setTaskType(2);
+        dataL.setTaskType(1);
         dataL.setInputStrData(inputStrData);
         dataL.setInputSubStrData(inputSubStrData);
-
-    }
-
-    @Subscribe
-    protected void onBeforeClose(BeforeCloseEvent event) {
 
     }
 
@@ -234,8 +229,8 @@ public class StartScreen extends Screen {
                             listSSI.add(Lssi);
                         }
                         savedDataL.setInputSubStrData(listSSI);
-                        savedDataL.setStrCount(listSI.size());
-                        savedDataL.setSubStrCount(listSSI.size());
+                        savedDataL.setStrCount(dataL.getInputStrData().size());
+                        savedDataL.setSubStrCount(dataL.getInputSubStrData().size());
                     })
                     .withScreenClass(LexgraphDataClassEdit.class)
                     .withOpenMode(OpenMode.DIALOG)
@@ -398,7 +393,7 @@ public class StartScreen extends Screen {
             setMagNumValues();
             countMagNum();
         }
-        else if(imported.charAt(1)=='1'||imported.charAt(1)=='2'){
+        else if(imported.charAt(1)=='1'){
             dataL = createLexgraphDataClass();
             dataL.getSaveStringLexgreph(imported);
             for(int i = 0; i < dataL.getStrCount(); i++){
@@ -431,15 +426,51 @@ public class StartScreen extends Screen {
                     })
                     .build()
                     .show();
-
+            setMagNumValues();
+            countMagNum();
         }
         else if(taskType==1){
+            lexgraphInputsDc.getMutableItems().clear();
+            lexgraphInputsDc_1.getMutableItems().clear();
             screenBuilders.lookup(LexgraphDataClass.class, this)
                     .withSelectHandler(LexgraphDataClasses -> {
                         dataL = LexgraphDataClasses.iterator().next();
+                        for(int i = 0; i < dataL.getInputStrData().size(); i++){
+
+                            if(dataL.getInputStrData().get(i).getInputType().equals("String")){
+                                LexgraphInput li = metadata.create(LexgraphInput.class);
+                                lexgraphInputsDc.getMutableItems().add(li);
+                                li.setInputType("String");
+                                li.setInput(dataL.getInputStrData().get(i).getInput());
+                            }
+
+                        }
+                        for(int i = 0; i < dataL.getInputStrData().size(); i++){
+
+                            if(!dataL.getInputStrData().get(i).getInputType().equals("String")) {
+                                dataL.getInputStrData().remove(i);
+                                i--;
+                            }
+                        }
+                        for(int i = 0; i < dataL.getInputSubStrData().size(); i++){
+                            if(dataL.getInputSubStrData().get(i).getInputType().equals("Substring")){
+                                LexgraphInput li = metadata.create(LexgraphInput.class);
+                                lexgraphInputsDc_1.getMutableItems().add(li);
+                                li.setInputType("Substring");
+                                li.setInput(dataL.getInputSubStrData().get(i).getInput());
+                            }
+                        }
+                        for(int i = 0; i < dataL.getInputSubStrData().size(); i++) {
+                            if (!dataL.getInputSubStrData().get(i).getInputType().equals("Substring")) {
+                                dataL.getInputSubStrData().remove(i);
+                                i--;
+                            }
+                        }
+                        countLexGraph();
                     })
                     .build()
                     .show();
+
 
         }
     }
