@@ -13,7 +13,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @JmixEntity
-@Entity(name = "sampler_MagNumDataClass")
+@Entity(name = "MagNumDataClass")
 public class MagNumDataClass extends DataClass {
 
     @Composition

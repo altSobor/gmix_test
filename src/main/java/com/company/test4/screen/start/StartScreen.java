@@ -2,14 +2,15 @@ package com.company.test4.screen.start;
 
 import com.company.test4.entity.*;
 import com.company.test4.screen.lexgraphdataclass.LexgraphDataClassEdit;
-import com.company.test4.screen.lexgraphinput.LexgraphInputEdit;
+import com.company.test4.screen.magnumdataclass.MagNumDataClassEdit;
 import io.jmix.core.Metadata;
-import io.jmix.core.MetadataTools;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.Screens;
-import io.jmix.ui.UiComponents;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.entitypicker.EntityOpenAction;
 import io.jmix.ui.action.list.CreateAction;
+import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.component.*;
 import io.jmix.ui.download.DownloadFormat;
 import io.jmix.ui.download.Downloader;
@@ -19,11 +20,7 @@ import io.jmix.ui.screen.*;
 import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nullable;
 import javax.inject.Named;
-import javax.swing.*;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +28,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 import static java.lang.Integer.parseInt;
 
@@ -61,6 +57,7 @@ public class StartScreen extends Screen {
     private Table lexgraphInputsTable;
     @Autowired
     private Table lexgraphInputsTable1;
+
     @Autowired
     private CollectionContainer<LexgraphInput> lexgraphInputsDc;
     @Autowired
@@ -136,6 +133,11 @@ public class StartScreen extends Screen {
     @Autowired
     private Button addString;
 
+    @Named("magnumSave")
+    private CreateAction<MagNumDataClass> magnumSave;
+    @Named("lexgraphSave")
+    private CreateAction<LexgraphDataClass> lexgraphSave;
+
     @Subscribe
     public void onInit(InitEvent event) {
         executor.execute(counterThread);
@@ -189,24 +191,59 @@ public class StartScreen extends Screen {
     @Subscribe("saveBtn")
         protected void  onSaveButtonClick(Button.ClickEvent event) {
         if(taskType == 0){
-            MagNumDataClass savedDataM = createMagNumClass();
-            savedDataM.setTaskType(dataM.getTaskType());
-            savedDataM.setDateTime(LocalDateTime.now());
-            List <MagNumInput> listMI = new ArrayList<MagNumInput>();
-            for(int i = 0; i < 9; i++){
-                MagNumInput mi = metadata.create(MagNumInput.class);
-                mi.setInput(dataM.getInputData().get(i).getInput());
-                mi.setMagNumDataClass(savedDataM);
-                listMI.add(mi);
-            }
-            savedDataM.setInputData(listMI);
-            dataM = savedDataM;
+            screenBuilders.editor(MagNumDataClass.class, this)
+                    .newEntity()
+                    .withInitializer(savedDataM -> {
+                        savedDataM.setDateTime(LocalDateTime.now());
+                        savedDataM.setTaskType(dataM.getTaskType());
+                        List <MagNumInput> listMI = new ArrayList<MagNumInput>();
+                        for(int i = 0; i < 9; i++){
+                            MagNumInput mi = metadata.create(MagNumInput.class);
+                            mi.setInput(dataM.getInputData().get(i).getInput());
+                            mi.setMagNumDataClass(savedDataM);
+                            listMI.add(mi);
+                        }
+                        savedDataM.setInputData(listMI);
+                    })
+                    .withScreenClass(MagNumDataClassEdit.class)
+                    .withOpenMode(OpenMode.DIALOG)
+                    .build()
+                    .show();
         }
-        else if(taskType == 0){
-            dataL.setTaskType(1);
-            dataL.setDateTime(LocalDateTime.now());
+        else if(taskType == 1){
+            screenBuilders.editor(LexgraphDataClass.class, this)
+                    .newEntity()
+                    .withInitializer(savedDataL -> {
+                        savedDataL.setDateTime(LocalDateTime.now());
+                        savedDataL.setTaskType(dataL.getTaskType());
+                        List <LexgraphInput> listSI = new ArrayList<LexgraphInput>();
+                        for(int i = 0; i < dataL.getInputStrData().size(); i++){
+                            LexgraphInput Lsi = metadata.create(LexgraphInput.class);
+                            Lsi.setInput(dataL.getInputStrData().get(i).getInput());
+                            Lsi.setInputType("String");
+                            Lsi.setLexgraphDataClass(savedDataL);
+                            listSI.add(Lsi);
+                        }
+                        savedDataL.setInputStrData(listSI);
+                        List <LexgraphInput> listSSI = new ArrayList<LexgraphInput>();
+                        for(int i = 0; i < dataL.getInputSubStrData().size(); i++){
+                            LexgraphInput Lssi = metadata.create(LexgraphInput.class);
+                            Lssi.setInput(dataL.getInputSubStrData().get(i).getInput());
+                            Lssi.setInputType("Substring");
+                            Lssi.setLexgraphDataClass(savedDataL);
+                            listSSI.add(Lssi);
+                        }
+                        savedDataL.setInputSubStrData(listSSI);
+                        savedDataL.setStrCount(listSI.size());
+                        savedDataL.setSubStrCount(listSSI.size());
+                    })
+                    .withScreenClass(LexgraphDataClassEdit.class)
+                    .withOpenMode(OpenMode.DIALOG)
+                    .build()
+                    .show();
         }
     }
+
     @Autowired
     private Downloader downloader;
     @Subscribe("exportBtn")
@@ -351,7 +388,6 @@ public class StartScreen extends Screen {
         dataL.getInputStrData().add(li);
         dataL.setStrCount(lexgraphInputsDc.getMutableItems().size());
     }
-
     @Subscribe("importBtn")
     public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
         InputStream is = importBtn.getFileContent();
@@ -383,6 +419,28 @@ public class StartScreen extends Screen {
             notifications.create()
                     .withCaption("Wrong file format")
                     .show();
+        }
+    }
+
+    @Subscribe("uploadBtn")
+    public void onUploadBtnClick(Button.ClickEvent event) {
+        if(taskType==0){
+            screenBuilders.lookup(MagNumDataClass.class, this)
+                    .withSelectHandler(MagNumDataClasses -> {
+                        dataM = MagNumDataClasses.iterator().next();
+                    })
+                    .build()
+                    .show();
+
+        }
+        else if(taskType==1){
+            screenBuilders.lookup(LexgraphDataClass.class, this)
+                    .withSelectHandler(LexgraphDataClasses -> {
+                        dataL = LexgraphDataClasses.iterator().next();
+                    })
+                    .build()
+                    .show();
+
         }
     }
 }

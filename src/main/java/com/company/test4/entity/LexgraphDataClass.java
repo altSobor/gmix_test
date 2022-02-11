@@ -14,7 +14,7 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 @JmixEntity
-@Entity(name = "sampler_LexgraphDataClass")
+@Entity(name = "LexgraphDataClass")
 public class LexgraphDataClass extends DataClass {
     @Column(name = "STR_COUNT")
     private Integer strCount;

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
         xmlns:c="http://jmix.io/schema/ui/jpql-condition"
-        caption="msg://magNumDataClassBrowse.caption"
-        focusComponent="magNumDataClassesTable">
+        caption="msg://dataClassBrowse.caption"
+        focusComponent="dataClassesTable">
     <data readOnly="true">
-        <collection id="magNumDataClassesDc"
-                    class="com.company.test4.entity.MagNumDataClass">
-            <fetchPlan extends="_base">
-                <property name="inputData" fetchPlan="_base"/>
-            </fetchPlan>
-            <loader id="magNumDataClassesDl">
+        <collection id="dataClassesDc"
+                    class="com.company.test4.entity.DataClass">
+            <fetchPlan extends="_base"/>
+            <loader id="dataClassesDl">
                 <query>
-                    <![CDATA[select e from MagNumDataClass e]]>
+                    <![CDATA[select e from DataClass e]]>
                 </query>
             </loader>
         </collection>
@@ -32,14 +30,14 @@
     </actions>
     <dialogMode height="600"
                 width="800"/>
-    <layout expand="magNumDataClassesTable" spacing="true">
+    <layout expand="dataClassesTable" spacing="true">
         <filter id="filter"
-                dataLoader="magNumDataClassesDl">
+                dataLoader="dataClassesDl">
             <properties include=".*"/>
         </filter>
-        <groupTable id="magNumDataClassesTable"
+        <groupTable id="dataClassesTable"
                     width="100%"
-                    dataContainer="magNumDataClassesDc">
+                    dataContainer="dataClassesDc">
             <actions>
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
@@ -52,9 +50,9 @@
             <simplePagination/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
-                <button id="createBtn" action="magNumDataClassesTable.create"/>
-                <button id="editBtn" action="magNumDataClassesTable.edit"/>
-                <button id="removeBtn" action="magNumDataClassesTable.remove"/>
+                <button id="createBtn" action="dataClassesTable.create"/>
+                <button id="editBtn" action="dataClassesTable.edit"/>
+                <button id="removeBtn" action="dataClassesTable.remove"/>
             </buttonsPanel>
         </groupTable>
         <hbox id="lookupActions" spacing="true" visible="false">

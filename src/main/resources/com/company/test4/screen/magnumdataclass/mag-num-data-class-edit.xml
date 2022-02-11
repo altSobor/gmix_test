@@ -6,7 +6,7 @@
         <instance id="magNumDataClassDc"
                   class="com.company.test4.entity.MagNumDataClass">
             <fetchPlan extends="_base">
-                <property name="inputData" fetchPlan="_base"/>
+                <property name="inputData"/>
             </fetchPlan>
             <loader/>
             <collection id="inputDataDc" property="inputData"/>
@@ -32,7 +32,6 @@
             <column width="350px">
                 <dateField id="dateTimeField" property="dateTime"/>
                 <textField id="taskTypeField" property="taskType"/>
-                <textField id="minCostField" property="minCost"/>
             </column>
         </form>
         <groupBox id="inputDataBox" caption="msg://com.company.test4.entity/MagNumDataClass.inputData">

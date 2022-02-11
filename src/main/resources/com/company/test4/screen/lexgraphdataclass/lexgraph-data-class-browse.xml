@@ -7,6 +7,7 @@
         <collection id="lexgraphDataClassesDc"
                     class="com.company.test4.entity.LexgraphDataClass">
             <fetchPlan extends="_base">
+                <property name="inputSubStrData" fetchPlan="_base"/>
                 <property name="inputStrData" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="lexgraphDataClassesDl">

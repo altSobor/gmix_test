@@ -29,6 +29,10 @@
             </loader>
         </collection>
     </data>
+    <actions>
+        <action id="magnumSave" type="create"/>
+        <action id="lexgraphSave" type="create"/>
+    </actions>
     <layout>
         <vbox spacing="true" align="MIDDLE_CENTER">
             <hbox spacing="true" align="TOP_CENTER">

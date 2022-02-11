@@ -27,8 +27,8 @@
     <layout spacing="true" expand="editActions">
         <form id="form" dataContainer="lexgraphInputDc">
             <column width="350px">
-                <textArea id="inputTypeField" property="inputType" rows="1" editable="false"/>
-                <textArea id="inputField" property="input" rows="1"/>
+                <textField id="inputTypeField" property="inputType"/>
+                <textArea id="inputField" property="input" rows="5"/>
             </column>
         </form>
         <hbox id="editActions" spacing="true">
