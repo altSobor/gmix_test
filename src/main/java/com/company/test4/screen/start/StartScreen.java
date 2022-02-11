@@ -385,7 +385,7 @@ public class StartScreen extends Screen {
     }
     @Subscribe("importBtn")
     public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
-        InputStream is = importBtn.getFileContent();
+        /*InputStream is = importBtn.getFileContent();
         String imported = "";
         assert is != null;
         byte[] outputData = is.readAllBytes();
@@ -417,7 +417,7 @@ public class StartScreen extends Screen {
             notifications.create()
                     .withCaption("Wrong file format")
                     .show();
-        }
+        }*/
     }
 
     @Subscribe("uploadBtn")
