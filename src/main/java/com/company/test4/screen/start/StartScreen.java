@@ -4,32 +4,19 @@ import com.company.test4.entity.*;
 import com.company.test4.screen.lexgraphdataclass.LexgraphDataClassEdit;
 import com.company.test4.screen.magnumdataclass.MagNumDataClassEdit;
 import io.jmix.core.Metadata;
-import io.jmix.ui.Notifications;
 import io.jmix.ui.ScreenBuilders;
-import io.jmix.ui.Screens;
-import io.jmix.ui.action.Action;
-import io.jmix.ui.action.entitypicker.EntityOpenAction;
-import io.jmix.ui.action.list.CreateAction;
-import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.component.*;
 import io.jmix.ui.download.DownloadFormat;
 import io.jmix.ui.download.Downloader;
 import io.jmix.ui.model.CollectionContainer;
-import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.screen.*;
-import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Named;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static java.lang.Integer.parseInt;
 
 
 @UiController("StartScreen")
@@ -39,16 +26,6 @@ public class StartScreen extends Screen {
     private Metadata metadata;
     @Autowired
     ScreenBuilders screenBuilders;
-    @Autowired
-    private FileUploadField importBtn;
-    @Autowired
-    private Button uploadBtn;
-    @Autowired
-    private Button exportBtn;
-    @Autowired
-    private Button saveBtn;
-    @Autowired
-    private Button countBtn;
     @Autowired
     private ComboBox tasksCbx;
 
@@ -66,19 +43,9 @@ public class StartScreen extends Screen {
     private Table outputsTable;
     @Autowired
     private CollectionContainer<Output> outputsDc;
-    @Autowired
-    private TemporaryStorage temporaryStorage;
-    @Autowired
-    private Notifications notifications;
-    @Autowired
-    private CollectionLoader<Output> outputsDl;
-    @Autowired
-    private CollectionLoader<LexgraphInput> lexgraphInputsDl1;
-    @Autowired
-    private CollectionLoader<LexgraphInput> lexgraphInputsDl;
     private MagNumDataClass dataM = new MagNumDataClass();
     private LexgraphDataClass dataL = new LexgraphDataClass();
-    ArrayList<int[][]> MagNum = new ArrayList<int[][]>();
+    ArrayList<int[][]> MagNum = new ArrayList<>();
     ExecutorService executor = Executors.newFixedThreadPool(1);
     CounterThread counterThread = new CounterThread(15);
     List<MagNumInput> inputDataM  = new ArrayList<>();
@@ -127,16 +94,9 @@ public class StartScreen extends Screen {
     @Autowired
     private TextField costTF;
     @Autowired
-    private Screens screens;
-    @Autowired
     private Button addSubString;
     @Autowired
     private Button addString;
-
-    @Named("magnumSave")
-    private CreateAction<MagNumDataClass> magnumSave;
-    @Named("lexgraphSave")
-    private CreateAction<LexgraphDataClass> lexgraphSave;
 
     @Subscribe
     public void onInit(InitEvent event) {
@@ -179,9 +139,6 @@ public class StartScreen extends Screen {
     LexgraphDataClass createLexgraphDataClass() {
         return metadata.create(LexgraphDataClass.class);
     }
-    MagNumDataClass createMagNumClass() {
-        return metadata.create(MagNumDataClass.class);
-    }
 
     @Subscribe("saveBtn")
         protected void  onSaveButtonClick(Button.ClickEvent event) {
@@ -191,7 +148,7 @@ public class StartScreen extends Screen {
                     .withInitializer(savedDataM -> {
                         savedDataM.setDateTime(LocalDateTime.now());
                         savedDataM.setTaskType(dataM.getTaskType());
-                        List <MagNumInput> listMI = new ArrayList<MagNumInput>();
+                        List <MagNumInput> listMI = new ArrayList<>();
                         for(int i = 0; i < 9; i++){
                             MagNumInput mi = metadata.create(MagNumInput.class);
                             mi.setInput(dataM.getInputData().get(i).getInput());
@@ -211,7 +168,7 @@ public class StartScreen extends Screen {
                     .withInitializer(savedDataL -> {
                         savedDataL.setDateTime(LocalDateTime.now());
                         savedDataL.setTaskType(dataL.getTaskType());
-                        List <LexgraphInput> listSI = new ArrayList<LexgraphInput>();
+                        List <LexgraphInput> listSI = new ArrayList<>();
                         for(int i = 0; i < dataL.getInputStrData().size(); i++){
                             LexgraphInput Lsi = metadata.create(LexgraphInput.class);
                             Lsi.setInput(dataL.getInputStrData().get(i).getInput());
