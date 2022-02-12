@@ -140,7 +140,7 @@ public class StartScreen extends Screen {
 
     @Subscribe
     public void onInit(InitEvent event) {
-    /*    executor.execute(counterThread);
+        executor.execute(counterThread);
         List<String> list = new ArrayList<>();
         list.add("Lexical graf");
         list.add("Magic square");
@@ -161,9 +161,9 @@ public class StartScreen extends Screen {
         dataL.setTaskType(1);
         dataL.setInputStrData(inputStrData);
         dataL.setInputSubStrData(inputSubStrData);
-*/
+
     }
-/*
+
     void setMagNumValues(){
         tbInput00.setValue(dataM.getInputData().get(0).getInput());
         tbInput01.setValue(dataM.getInputData().get(1).getInput());
@@ -419,7 +419,7 @@ public class StartScreen extends Screen {
                     .show();
         }*/
     }
-/*
+
     @Subscribe("uploadBtn")
     public void onUploadBtnClick(Button.ClickEvent event) {
         if(taskType==0){
@@ -477,4 +477,4 @@ public class StartScreen extends Screen {
 
         }
     }
-}*/
+}

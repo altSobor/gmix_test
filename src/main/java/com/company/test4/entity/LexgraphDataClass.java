@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,8 +70,8 @@ public class LexgraphDataClass extends DataClass {
     }
 
     public List<Output> countOutputData(){
-        List<Output> outputList = new ArrayList<Output>();
-        ArrayList<String> stringList = new ArrayList<String>();
+        List<Output> outputList = new ArrayList<>();
+        ArrayList<String> stringList = new ArrayList<>();
         for(int i = 0; i < inputStrData.size(); i++){
             int counter = 0;
             for(int j = 0; j < inputSubStrData.size(); j++){
@@ -114,8 +113,8 @@ public class LexgraphDataClass extends DataClass {
     }
 
     public void getSaveStringLexgreph(String ldc){
-        inputStrData = new ArrayList<LexgraphInput>();
-        inputSubStrData = new ArrayList<LexgraphInput>();
+        inputStrData = new ArrayList<>();
+        inputSubStrData = new ArrayList<>();
         String[] splitedLDC = ldc.split("\";\"");
         super.setTaskType(parseInt(splitedLDC[0].replace("\"", "")));
         setStrCount(parseInt(splitedLDC[1]));
