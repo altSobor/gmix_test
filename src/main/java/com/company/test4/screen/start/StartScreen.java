@@ -140,7 +140,7 @@ public class StartScreen extends Screen {
 
     @Subscribe
     public void onInit(InitEvent event) {
-        executor.execute(counterThread);
+    /*    executor.execute(counterThread);
         List<String> list = new ArrayList<>();
         list.add("Lexical graf");
         list.add("Magic square");
@@ -161,9 +161,9 @@ public class StartScreen extends Screen {
         dataL.setTaskType(1);
         dataL.setInputStrData(inputStrData);
         dataL.setInputSubStrData(inputSubStrData);
-
+*/
     }
-
+/*
     void setMagNumValues(){
         tbInput00.setValue(dataM.getInputData().get(0).getInput());
         tbInput01.setValue(dataM.getInputData().get(1).getInput());
@@ -220,7 +220,7 @@ public class StartScreen extends Screen {
                             listSI.add(Lsi);
                         }
                         savedDataL.setInputStrData(listSI);
-                        List <LexgraphInput> listSSI = new ArrayList<LexgraphInput>();
+                        List <LexgraphInput> listSSI = new ArrayList<>();
                         for(int i = 0; i < dataL.getInputSubStrData().size(); i++){
                             LexgraphInput Lssi = metadata.create(LexgraphInput.class);
                             Lssi.setInput(dataL.getInputSubStrData().get(i).getInput());
@@ -384,7 +384,7 @@ public class StartScreen extends Screen {
         dataL.setStrCount(lexgraphInputsDc.getMutableItems().size());
     }
     @Subscribe("importBtn")
-    public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) throws IOException {
+    public void onImportBtnFileUploadSucceed(SingleFileUploadField.FileUploadSucceedEvent event) {
         /*InputStream is = importBtn.getFileContent();
         String imported = "";
         assert is != null;
@@ -419,7 +419,7 @@ public class StartScreen extends Screen {
                     .show();
         }*/
     }
-
+/*
     @Subscribe("uploadBtn")
     public void onUploadBtnClick(Button.ClickEvent event) {
         if(taskType==0){
@@ -477,4 +477,4 @@ public class StartScreen extends Screen {
 
         }
     }
-}
+}*/
