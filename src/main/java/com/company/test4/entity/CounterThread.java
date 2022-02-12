@@ -1,5 +1,7 @@
 package com.company.test4.entity;
 
+import org.slf4j.Logger;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,9 +9,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CounterThread implements Runnable {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(CounterThread.class);
     int strSum;
     public boolean isActive;
-    ArrayList<int[][]> magQuard = new ArrayList<int[][]>();
+    ArrayList<int[][]> magQuard = new ArrayList<>();
     public CounterThread(int strSum){
         isActive = true;
         this.strSum=strSum;
@@ -70,10 +73,10 @@ public class CounterThread implements Runnable {
     public void saveData(ArrayList<int[][]> arr){
         try(FileWriter writer = new FileWriter("magNums.txt", false))
         {
-            for(int i = 0; i < arr.size(); i++){
-                for(int j = 0; j < 3; j++){
-                    for(int k = 0; k < 3; k++){
-                        writer.write(arr.get(i)[j][k]);
+            for (int[][] ints : arr) {
+                for (int j = 0; j < 3; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        writer.write(ints[j][k]);
                     }
                 }
                 writer.append('\n');
@@ -81,7 +84,7 @@ public class CounterThread implements Runnable {
             writer.flush();
         }
         catch(IOException ex){
-            System.out.println(ex.getMessage());
+            log.info(ex.getMessage());
         }
     }
     public ArrayList<int[][]> importData(){

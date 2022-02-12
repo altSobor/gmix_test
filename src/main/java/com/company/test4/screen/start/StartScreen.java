@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,20 +28,20 @@ public class StartScreen extends Screen {
     @Autowired
     ScreenBuilders screenBuilders;
     @Autowired
-    private ComboBox tasksCbx;
+    private ComboBox<String> tasksCbx;
 
     int taskType = 1;
     @Autowired
-    private Table lexgraphInputsTable;
+    private Table<LexgraphInput> lexgraphInputsTable;
     @Autowired
-    private Table lexgraphInputsTable1;
+    private Table<LexgraphInput> lexgraphInputsTable1;
 
     @Autowired
     private CollectionContainer<LexgraphInput> lexgraphInputsDc;
     @Autowired
     private CollectionContainer<LexgraphInput> lexgraphInputsDc_1;
     @Autowired
-    private Table outputsTable;
+    private Table<Output> outputsTable;
     @Autowired
     private CollectionContainer<Output> outputsDc;
     private MagNumDataClass dataM = new MagNumDataClass();
@@ -52,47 +53,47 @@ public class StartScreen extends Screen {
     List<LexgraphInput> inputSubStrData = new ArrayList<>();
     List<LexgraphInput> inputStrData = new ArrayList<>();
     @Autowired
-    private TextField tbInput00;
+    private TextField<Integer> tbInput00;
     @Autowired
-    private TextField tbInput01;
+    private TextField<Integer> tbInput01;
     @Autowired
-    private TextField tbInput02;
+    private TextField<Integer> tbInput02;
     @Autowired
-    private TextField tbInput10;
+    private TextField<Integer> tbInput10;
     @Autowired
-    private TextField tbInput11;
+    private TextField<Integer> tbInput11;
     @Autowired
-    private TextField tbInput12;
+    private TextField<Integer> tbInput12;
     @Autowired
-    private TextField tbInput20;
+    private TextField<Integer> tbInput20;
     @Autowired
-    private TextField tbInput21;
+    private TextField<Integer> tbInput21;
     @Autowired
-    private TextField tbInput22;
+    private TextField<Integer> tbInput22;
     @Autowired
     private VBoxLayout magicNumOutputField;
     @Autowired
-    private TextField tbOutput00;
+    private TextField<String> tbOutput00;
     @Autowired
-    private TextField tbOutput01;
+    private TextField<String> tbOutput01;
     @Autowired
-    private TextField tbOutput02;
+    private TextField<String> tbOutput02;
     @Autowired
-    private TextField tbOutput10;
+    private TextField<String> tbOutput10;
     @Autowired
-    private TextField tbOutput11;
+    private TextField<String> tbOutput11;
     @Autowired
-    private TextField tbOutput12;
+    private TextField<String> tbOutput12;
     @Autowired
-    private TextField tbOutput20;
+    private TextField<String> tbOutput20;
     @Autowired
-    private TextField tbOutput21;
+    private TextField<String> tbOutput21;
     @Autowired
-    private TextField tbOutput22;
+    private TextField<String> tbOutput22;
     @Autowired
     private VBoxLayout magicNumInputField;
     @Autowired
-    private TextField costTF;
+    private TextField<String> costTF;
     @Autowired
     private Button addSubString;
     @Autowired
@@ -206,6 +207,7 @@ public class StartScreen extends Screen {
         } else if(taskType == 1){
             str = dataL.setSaveStringLexgreph().getBytes();
         }
+        assert str != null;
         downloader.download(
                 str,
                 "item.txt",
@@ -239,16 +241,16 @@ public class StartScreen extends Screen {
     void countLexGraph(){
         outputsDc.getMutableItems().clear();
         List<Output> outputList = dataL.countOutputData();
-        for(int i = 0; i < outputList.size(); i++){
+        for (Output output : outputList) {
             Output lo = metadata.create(Output.class);
-            lo.setOutput(outputList.get(i).getOutput());
+            lo.setOutput(output.getOutput());
             outputsDc.getMutableItems().add(lo);
         }
     }
 
     @Subscribe("tasksCbx")
     public void onTasksCbxValueChange(HasValue.ValueChangeEvent event) {
-        if(tasksCbx.getValue().equals("Magic square")){
+        if(Objects.equals(tasksCbx.getValue(), "Magic square")){
             if(!counterThread.isActive){
                 MagNum = counterThread.getMagQuard();
                 executor.shutdownNow();
@@ -262,7 +264,7 @@ public class StartScreen extends Screen {
             addString.setVisible(false);
             addSubString.setVisible(false);
         }
-        else if(tasksCbx.getValue().equals("Lexical graf")){
+        else if(Objects.equals(tasksCbx.getValue(), "Lexical graf")){
             taskType = 1;
             lexgraphInputsTable.setVisible(true);
             lexgraphInputsTable1.setVisible(true);
@@ -274,42 +276,42 @@ public class StartScreen extends Screen {
 
     @Subscribe("tbInput00")
     public void onTbInput00ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(0).setInput((Integer) tbInput00.getValue());
+        inputDataM.get(0).setInput(tbInput00.getValue());
     }
     @Subscribe("tbInput01")
     public void onTbInput01ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(1).setInput((Integer) tbInput01.getValue());
+        inputDataM.get(1).setInput(tbInput01.getValue());
     }
     @Subscribe("tbInput02")
     public void onTbInput02ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(2).setInput((Integer) tbInput02.getValue());
+        inputDataM.get(2).setInput(tbInput02.getValue());
     }
     @Subscribe("tbInput10")
     public void onTbInput10ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(3).setInput((Integer) tbInput10.getValue());
+        inputDataM.get(3).setInput(tbInput10.getValue());
     }
     @Subscribe("tbInput11")
     public void onTbInput11ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(4).setInput((Integer) tbInput11.getValue());
+        inputDataM.get(4).setInput(tbInput11.getValue());
     }
     @Subscribe("tbInput12")
     public void onTbInput12ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(5).setInput((Integer) tbInput12.getValue());
+        inputDataM.get(5).setInput(tbInput12.getValue());
     }
     @Subscribe("tbInput20")
     public void onTbInput20ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(6).setInput((Integer) tbInput20.getValue());
+        inputDataM.get(6).setInput(tbInput20.getValue());
     }
     @Subscribe("tbInput21")
     public void onTbInput21ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(7).setInput((Integer) tbInput21.getValue());
+        inputDataM.get(7).setInput(tbInput21.getValue());
     }
     @Subscribe("tbInput22")
     public void onTbInput22ValueChange(HasValue.ValueChangeEvent<Integer> event) {
-        inputDataM.get(8).setInput((Integer) tbInput22.getValue());
+        inputDataM.get(8).setInput(tbInput22.getValue());
     }
     @Install(to = "lexgraphInputsTable", subject = "emptyStateLinkClickHandler")
-    private void lexgraphInputsTableEmptyStateLinkClickHandler(Table.EmptyStateClickEvent<LexgraphInput> emptyStateClickEvent) {
+    private void lexgraphInputsTableEmptyStateLinkClickHandler() {
         LexgraphInput li = metadata.create(LexgraphInput.class);
         lexgraphInputsDc.getMutableItems().add(li);
         li.setInputType("String");
@@ -317,7 +319,7 @@ public class StartScreen extends Screen {
         dataL.setStrCount(lexgraphInputsDc.getMutableItems().size());
     }
     @Install(to = "lexgraphInputsTable1", subject = "emptyStateLinkClickHandler")
-    private void lexgraphInputsTable1EmptyStateLinkClickHandler(Table.EmptyStateClickEvent<LexgraphInput> emptyStateClickEvent) {
+    private void lexgraphInputsTable1EmptyStateLinkClickHandler() {
         LexgraphInput li = metadata.create(LexgraphInput.class);
         lexgraphInputsDc_1.getMutableItems().add(li);
         li.setInputType("Substring");
@@ -381,9 +383,7 @@ public class StartScreen extends Screen {
     public void onUploadBtnClick(Button.ClickEvent event) {
         if(taskType==0){
             screenBuilders.lookup(MagNumDataClass.class, this)
-                    .withSelectHandler(MagNumDataClasses -> {
-                        dataM = MagNumDataClasses.iterator().next();
-                    })
+                    .withSelectHandler(MagNumDataClasses -> dataM = MagNumDataClasses.iterator().next())
                     .build()
                     .show();
             setMagNumValues();

@@ -72,18 +72,18 @@ public class LexgraphDataClass extends DataClass {
     public List<Output> countOutputData(){
         List<Output> outputList = new ArrayList<>();
         ArrayList<String> stringList = new ArrayList<>();
-        for(int i = 0; i < inputStrData.size(); i++){
+        for (LexgraphInput inputStrDatum : inputStrData) {
             int counter = 0;
-            for(int j = 0; j < inputSubStrData.size(); j++){
-                if(inputStrData.get(i).getInput().toLowerCase().contains(inputSubStrData.get(j).getInput().toLowerCase())){
-                    String str = inputSubStrData.get(j).getInput();
+            for (LexgraphInput inputSubStrDatum : inputSubStrData) {
+                if (inputStrDatum.getInput().toLowerCase().contains(inputSubStrDatum.getInput().toLowerCase())) {
+                    String str = inputSubStrDatum.getInput();
 
-                    for(int k = 0; k < stringList.size(); k++){
-                        if(stringList.get(k).equals(str)){
+                    for (String s : stringList) {
+                        if (s.equals(str)) {
                             counter++;
                         }
                     }
-                    if(counter==0){
+                    if (counter == 0) {
                         stringList.add(str);
                     }
                 }
@@ -91,25 +91,25 @@ public class LexgraphDataClass extends DataClass {
             }
         }
         Collections.sort(stringList);
-        for(int i = 0; i < stringList.size(); i++){
+        for (String s : stringList) {
             Output outputs = new Output();
-            outputs.setOutput(stringList.get(i));
+            outputs.setOutput(s);
             outputList.add(outputs);
         }
         return outputList;
     }
 
     public String setSaveStringLexgreph(){
-        String ldc = "\""+super.getTaskType().toString()+"\";\"" + getStrCount().toString()+"\";\"" +  getSubStrCount().toString() + "\";\"";
+        StringBuilder ldc = new StringBuilder("\"" + super.getTaskType().toString() + "\";\"" + getStrCount().toString() + "\";\"" + getSubStrCount().toString() + "\";\"");
         for(int i = 0; i < strCount; i++){
-            ldc = ldc + inputStrData.get(i).getInput() + ";";
+            ldc.append(inputStrData.get(i).getInput()).append(";");
         }
-        ldc = ldc + "\";\"";
+        ldc.append("\";\"");
         for(int i = 0; i < subStrCount; i++){
-            ldc = ldc + inputSubStrData.get(i).getInput() + ";";
+            ldc.append(inputSubStrData.get(i).getInput()).append(";");
         }
-        ldc = ldc + "\"";
-        return ldc;
+        ldc.append("\"");
+        return ldc.toString();
     }
 
     public void getSaveStringLexgreph(String ldc){

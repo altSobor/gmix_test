@@ -65,12 +65,12 @@ public class MagNumDataClass extends DataClass {
     }
 
     public String setSaveStringMagNum(){
-        String mnc = "\""+super.getTaskType().toString()+"\";\"";
+        StringBuilder mnc = new StringBuilder("\"" + super.getTaskType().toString() + "\";\"");
         for(int i = 0; i < 9; i++){
-            mnc = mnc + getInputData().get(i).getInput().toString() + ";";
+            mnc.append(getInputData().get(i).getInput().toString()).append(";");
         }
-        mnc = mnc + "\"";
-        return mnc;
+        mnc.append("\"");
+        return mnc.toString();
     }
 
     public void getSaveStringMagNum(String mnc){

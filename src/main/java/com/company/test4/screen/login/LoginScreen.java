@@ -56,20 +56,12 @@ public class LoginScreen extends Screen {
     private JmixApp app;
 
     private final Logger log = LoggerFactory.getLogger(LoginScreen.class);
-    @Autowired
-    private Action submit;
-    @Autowired
-    private Button loginButton;
 
     @Subscribe
     private void onInit(InitEvent event) {
         usernameField.focus();
         initLocalesField();
         initDefaultCredentials();
-    }
-    @Subscribe
-    private void afterInit(InitEvent event) {
-        submit.actionPerform(loginButton);
     }
     private void initLocalesField() {
         localesField.setOptionsMap(messageTools.getAvailableLocalesMap());
